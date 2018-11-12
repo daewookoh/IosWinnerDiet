@@ -1,0 +1,6 @@
+framework module Pods_winnerdietTests {
+  umbrella header "Pods-winnerdietTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

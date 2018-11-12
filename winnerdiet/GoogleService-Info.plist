@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>215406779064-g6q9liljte3h26r107jgedsauctalvga.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.215406779064-g6q9liljte3h26r107jgedsauctalvga</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCVqHx-WztinbEXP1EZRa_XpBIu0ePHfcw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>215406779064</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>comm.ios.winnerdiet</string>
+	<key>PROJECT_ID</key>
+	<string>winnerdiet-93f87</string>
+	<key>STORAGE_BUCKET</key>
+	<string>winnerdiet-93f87.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:215406779064:ios:839f75ec34dd2036</string>
+	<key>DATABASE_URL</key>
+	<string>https://winnerdiet-93f87.firebaseio.com</string>
+</dict>
+</plist>
