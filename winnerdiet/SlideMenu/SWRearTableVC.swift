@@ -62,16 +62,16 @@ class SWRearTableVC: UITableViewController {
             url = common.default_url
             
         case "몸짱너머" :
-            url = common.default_url + "/webzine/list.php"
+            url = common.default_url + "webzine/list.php"
             
         case "친구초대" :
-            url = common.default_url + "/member/body_invitation.php"
+            url = common.default_url + "member/body_invitation.php"
             
         case "쇼미더머니" :
-            url = common.default_url + "/bbs/?b_code=gift"
+            url = common.default_url + "bbs/?b_code=gift"
             
         case "만보기" :
-            url = common.default_url + "/step.php"
+            url = common.default_url + "login/login.php"
         
         default :
             title = "홈[Home]"

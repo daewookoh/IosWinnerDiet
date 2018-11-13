@@ -50,11 +50,12 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     var webViewUrl:String = ""
     var osWebUrl:String = ""
     var selUrl:String = ""
+    
     var selMode:String = ""
     var myUrl:String = ""
     var alertController: UIAlertController!
     var webView: WKWebView!
-    var contentController = WKUserContentController()
+    //var contentController = WKUserContentController()
     var createWebView: WKWebView!
     
     // 네이버 로그인
@@ -63,7 +64,6 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     var id = ""
     var gender = ""
     var name = ""
-
     
     override func viewDidLoad() {
         
@@ -83,6 +83,7 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
         self.dismiss(animated: true, completion: nil)
         
         myTitle.backgroundColor = UIColor.init(red: 81/255, green: 61/255, blue: 238/255, alpha: 1)
+        
         
         let contentController = WKUserContentController()
         contentController.add(self, name: common.js_name)
@@ -107,6 +108,10 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
             webViewUrl = common.default_url
         }
         
+        if(webViewUrl.range(of: "login.php") != nil) {
+            self.moveToLoginView()
+        }
+            
         if let theWebView = webView{
             loadPage(url:webViewUrl)
             theWebView.uiDelegate = self
@@ -196,10 +201,14 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     }
     
     func moveToErrorView(){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let next = storyboard.instantiateViewController(withIdentifier: "ErrorVC")as! ErrorVC
+        let next = storyboard?.instantiateViewController(withIdentifier: "ErrorVC")as! ErrorVC
         self.navigationController?.pushViewController(next, animated: false)
         self.dismiss(animated: false, completion: nil)
+    }
+    
+    func moveToLoginView(){
+        let next = storyboard?.instantiateViewController(withIdentifier: "LoginVC")as! LoginVC
+        self.present(next, animated:true, completion:nil)
     }
     
     func webView(_ webView: WKWebView,
@@ -216,9 +225,12 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
         if (webView.url?.absoluteString==common.default_url)
         {
             sendDeviceInfo()
-            sendStepInfo()
         }
         
+        if ((webView.url?.absoluteString.range(of: "step.php")) != nil)
+        {
+            sendStepInfo()
+        }
         
     }
     
@@ -235,7 +247,7 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
             decisionHandler(.cancel)
             return
             
-        } else if !url.absoluteString.hasPrefix("http://") && !url.absoluteString.hasPrefix("https://") {
+        }else if !url.absoluteString.hasPrefix("http://") && !url.absoluteString.hasPrefix("https://") {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url)
                 decisionHandler(.cancel)
@@ -284,6 +296,17 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     override func viewWillAppear(_ animated: Bool) {
         setNavController()
         checkNetwork()
+        
+        let loginUrl = common.getUD("loginUrl") ?? ""
+        
+        print(loginUrl)
+        
+        if(!loginUrl.isEmpty)
+        {
+            print("A")
+            loadPage(url: loginUrl)
+        }
+
     }
     
     @objc func reloadWebView(_ notification: Notification?) {

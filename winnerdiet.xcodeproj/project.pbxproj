@@ -12,6 +12,7 @@
 		4C82A36C2199031900C87602 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A36A2199031900C87602 /* SWRevealViewController.m */; };
 		4C82A370219909F800C87602 /* SWRearTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A36F219909F700C87602 /* SWRearTableVC.swift */; };
 		4C82A372219917DC00C87602 /* SWFrontWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A371219917DC00C87602 /* SWFrontWebVC.swift */; };
+		4C82A375219A62DF00C87602 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A374219A62DF00C87602 /* LoginVC.swift */; };
 		4CDA4730219417F4000250F4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CDA472F219417F3000250F4 /* GoogleService-Info.plist */; };
 		4CDA473421941A27000250F4 /* Images-3.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CDA473321941A27000250F4 /* Images-3.xcassets */; };
 		4CE4A3792193CEBB008E0919 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CE4A3772193CEBB008E0919 /* LaunchScreen.storyboard */; };
@@ -64,6 +65,7 @@
 		4C82A36B2199031900C87602 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		4C82A36F219909F700C87602 /* SWRearTableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWRearTableVC.swift; sourceTree = "<group>"; };
 		4C82A371219917DC00C87602 /* SWFrontWebVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SWFrontWebVC.swift; sourceTree = "<group>"; };
+		4C82A374219A62DF00C87602 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		4CDA472F219417F3000250F4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4CDA473321941A27000250F4 /* Images-3.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-3.xcassets"; sourceTree = "<group>"; };
 		4CE4A36B2193CEB9008E0919 /* winnerdiet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = winnerdiet.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +158,7 @@
 				4CE4A3A82193D72A008E0919 /* ViewControllerSample.swift */,
 				4CE4A3A62193D72A008E0919 /* MainWebVC.swift */,
 				4CE4A3A92193D72A008E0919 /* ErrorVC.swift */,
+				4C82A374219A62DF00C87602 /* LoginVC.swift */,
 			);
 			path = DefaultVC;
 			sourceTree = "<group>";
@@ -507,6 +510,7 @@
 				4CE4A3AD2193D72A008E0919 /* AppDelegate.swift in Sources */,
 				4C82A372219917DC00C87602 /* SWFrontWebVC.swift in Sources */,
 				4C82A36C2199031900C87602 /* SWRevealViewController.m in Sources */,
+				4C82A375219A62DF00C87602 /* LoginVC.swift in Sources */,
 				4CE4A3AE2193D72A008E0919 /* CheckNetwork.swift in Sources */,
 				4CE4A3B42193D72A008E0919 /* Common.swift in Sources */,
 				4C82A370219909F800C87602 /* SWRearTableVC.swift in Sources */,
