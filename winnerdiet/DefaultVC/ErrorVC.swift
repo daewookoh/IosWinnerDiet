@@ -8,10 +8,10 @@
 
 import UIKit
 
-class ErrorViewController: UIViewController {
+class ErrorVC: UIViewController {
     @IBAction func retryBtn(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let next = storyboard.instantiateViewController(withIdentifier: "mainView")as! MainViewController
+        let next = storyboard.instantiateViewController(withIdentifier: "MainWebVC")as! MainWebVC
         self.navigationController?.pushViewController(next, animated: false)
         self.dismiss(animated: false, completion: nil)
     }

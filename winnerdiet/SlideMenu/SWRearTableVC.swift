@@ -9,7 +9,7 @@
 import Foundation
 
 @available(iOS 8.0, *)
-class TableViewMenuController: UITableViewController {
+class SWRearTableVC: UITableViewController {
     @IBOutlet weak var myName: UILabel!
     
     let common = Common()
@@ -52,7 +52,7 @@ class TableViewMenuController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let DestVC = segue.destination as! WebViewController
+        let DestVC = segue.destination as! SWFrontWebVC
         let indexPath : IndexPath = self.tableView.indexPathForSelectedRow!
         let selTitle = TableArray[indexPath.row]
 

@@ -1,9 +1,9 @@
 //
-//  MainViewController.swift
-//  dreamteams_ios
+//  ViewController.swift
+//  test
 //
-//  Created by godowondev on 2018. 5. 13..
-//  Copyright © 2018년 dreamteams. All rights reserved.
+//  Created by design on 2015. 9. 17..
+//  Copyright (c) 2015년 design. All rights reserved.
 //
 
 import UIKit
@@ -14,18 +14,47 @@ import Social
 import FBSDKShareKit
 import HealthKit
 
-class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate {
+@available(iOS 8.0, *)
+class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, XMLParserDelegate, NaverThirdPartyLoginConnectionDelegate{
 
+    @IBOutlet weak var myTitle: UILabel!
+    @IBOutlet weak var myViewForWeb: UIView!
+    
+    @IBAction func backBtnClicked(_ sender: Any) {
+
+        let url = webView.url?.absoluteString
+        
+        if(url==common.default_url){
+            exit(0)
+        }else if(url?.range(of: "step.php") != nil){
+            loadPage(url: common.default_url)
+        }else if(webView.canGoBack){
+            webView.goBack()
+        }else{
+            loadPage(url: common.default_url)
+        }
+    }
+    
+    @IBAction func menuBtnClicked(_ sender: Any) {
+        self.revealViewController().revealToggle(self)
+    }
+    
+    let common = Common()
+    
     var refreshControl:UIRefreshControl?
     var healthStore = HKHealthStore()
     var stepData =  [String:Int]()
     
-    // ios 11이하 버젼에서는 스토리보드를 이용한 WKWebView를 사용할수 없으므로 아래와 같이 수동처리
-    //@IBOutlet weak var webView: WKWebView!
+    var selTitle:String = ""
+    var url:String = ""
+    var webViewUrl:String = ""
+    var osWebUrl:String = ""
+    var selUrl:String = ""
+    var selMode:String = ""
+    var myUrl:String = ""
+    var alertController: UIAlertController!
     var webView: WKWebView!
-    var sUrl:String = ""
-    let common = Common()
-    let apiHelper = APIHelper()
+    var contentController = WKUserContentController()
     var createWebView: WKWebView!
     
     // 네이버 로그인
@@ -34,6 +63,64 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
     var id = ""
     var gender = ""
     var name = ""
+
+    
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        //webView.uiDelegate = self // js alert 사용을 위해 필요
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapFunction))
+        myTitle.isUserInteractionEnabled = true
+        myTitle.addGestureRecognizer(tap)
+        
+        //App Delegate 에서 DidBecomeActive감지
+        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadWebView(_:)), name: NSNotification.Name("ReloadWebView"), object: nil)
+        
+        // 슬라이딩 메뉴
+        self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        
+        self.dismiss(animated: true, completion: nil)
+        
+        myTitle.backgroundColor = UIColor.init(red: 81/255, green: 61/255, blue: 238/255, alpha: 1)
+        
+        let contentController = WKUserContentController()
+        contentController.add(self, name: common.js_name)
+        
+        // wkwebview 설정
+        let preferences = WKPreferences()
+        preferences.javaScriptEnabled = true
+        
+        let configuration = WKWebViewConfiguration()
+        configuration.preferences = preferences
+        configuration.userContentController = contentController
+        
+        let item = WKWebView()
+        item.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height-60)
+        
+        webView = WKWebView(frame: item.frame, configuration: configuration)
+        
+        webViewUrl = selUrl
+        
+        if(webViewUrl.isEmpty)
+        {
+            webViewUrl = common.default_url
+        }
+        
+        if let theWebView = webView{
+            loadPage(url:webViewUrl)
+            theWebView.uiDelegate = self
+            theWebView.navigationDelegate = self
+            
+            refreshControl = UIRefreshControl.init()
+            refreshControl!.addTarget(self, action:#selector(pullToRefresh), for: UIControl.Event.valueChanged)
+            theWebView.scrollView.addSubview(self.refreshControl!)
+            //theWebView.UIDelegate = self
+            myViewForWeb.addSubview(theWebView)
+            
+        }
+        
+    }
     
     // 웹뷰 팝업처리
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
@@ -69,15 +156,79 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
     }
     // 웹뷰 팝업처리 끝
     
+    @objc func pullToRefresh(refresh:UIRefreshControl){
+        webView.reload()
+    }
+    
+    @objc func tapFunction(){
+        loadPage(url: common.default_url)
+    }
+    
+    func setNavController(){
+        //상단바 숨기기
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        /*
+        //페이지변환시 fade효과
+        let transition: CATransition = CATransition()
+        transition.duration = 0.4
+        transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        transition.type = CATransitionType.fade
+        self.navigationController!.view.layer.add(transition, forKey: nil)
+        */
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    override func loadView() {
+        super.loadView()
+        
+        UserDefaults.standard.register(defaults: ["UserAgent": UIWebView().stringByEvaluatingJavaScript(from: "navigator.userAgent")! + common.user_agent])
+    }
+    
+    func checkNetwork(){
+        if(CheckNetwork.isConnected()==false)
+        {
+            self.moveToErrorView()
+        }
+    }
+    
+    func moveToErrorView(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let next = storyboard.instantiateViewController(withIdentifier: "ErrorVC")as! ErrorVC
+        self.navigationController?.pushViewController(next, animated: false)
+        self.dismiss(animated: false, completion: nil)
+    }
+    
+    func webView(_ webView: WKWebView,
+                 didStartProvisionalNavigation navigation: WKNavigation){
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+    
+    func webView(_ webView: WKWebView,
+                 didFinish navigation: WKNavigation){
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        
+        refreshControl?.endRefreshing()
+        
+        if (webView.url?.absoluteString==common.default_url)
+        {
+            sendDeviceInfo()
+            sendStepInfo()
+        }
+        
+        
+    }
+    
     // 웹뷰 결제처리
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-  
+        
         guard let url = navigationAction.request.url else {
             decisionHandler(.cancel)
             return
         }
-
-        print(url)
         
         if url.absoluteString.range(of: "//itunes.apple.com/") != nil {
             UIApplication.shared.open(url)
@@ -91,7 +242,7 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                 return
             }
         }
- 
+        
         switch navigationAction.navigationType {
         case .linkActivated:
             if navigationAction.targetFrame == nil || !navigationAction.targetFrame!.isMainFrame {
@@ -126,7 +277,29 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
         return nil
     }
     // 웹뷰 결제처리 끝
+    
+    // MARK: WKUIDelegate methods
+    
 
+    override func viewWillAppear(_ animated: Bool) {
+        setNavController()
+        checkNetwork()
+    }
+    
+    @objc func reloadWebView(_ notification: Notification?) {
+        refreshControl?.beginRefreshing()
+        webView.reload()
+    }
+
+    
+    func uicolorFromHex(_ rgbValue:UInt32)->UIColor{
+        let red = CGFloat((rgbValue & 0xFF0000) >> 16)/256.0
+        let green = CGFloat((rgbValue & 0xFF00) >> 8)/256.0
+        let blue = CGFloat(rgbValue & 0xFF)/256.0
+        
+        return UIColor(red:red, green:green, blue:blue, alpha:1.0)
+    }
+    
     
     // 로그인전
     // 로그인 토큰이 없는 경우, 로그인 화면을 오픈한다.
@@ -218,72 +391,6 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
     }
     // 네이버 로그인 끝
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        if let cur_url = webView.url?.absoluteString{
-            if(cur_url == "http://m.dreamteams.co.kr/")
-            {
-                sendStepInfo()
-            }
-        }
-        
-        refreshControl?.endRefreshing()
-        
-        let app_start_yn = common.getUD("app_start_yn")
-        
-        if(app_start_yn=="Y")
-        {
-            sendDeviceInfo()
-        }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.webView.uiDelegate = self
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        /*
-        if(sUrl=="" && sUrl.isEmpty)
-        {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                
-                self.checkEvent()
-            }
-        }
-         */
-    }
-    
-    override func loadView() {
-        super.loadView()
-        
-        UserDefaults.standard.register(defaults: ["UserAgent": UIWebView().stringByEvaluatingJavaScript(from: "navigator.userAgent")! + common.user_agent])
-        
-        // ios 11이하 버젼에서는 스토리보드를 이용한 WKWebView를 사용할수 없으므로 아래와 같이 수동처리
-        let contentController = WKUserContentController()
-        contentController.add(self, name: common.js_name)
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
-        
-        webView = WKWebView(frame: .zero, configuration: config)
-        webView.uiDelegate = self as WKUIDelegate
-        webView.navigationDelegate = self as WKNavigationDelegate
-        
-        view = webView
-        
-        refreshControl = UIRefreshControl.init()
-        refreshControl!.addTarget(self, action:#selector(pullToRefresh), for: UIControl.Event.valueChanged)
-        webView.scrollView.addSubview(self.refreshControl!)
-        
-    }
-    
-    @objc func pullToRefresh(refresh:UIRefreshControl){
-        webView.reload()
-    }
-    
-    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         if(message.name==common.js_name){
@@ -294,7 +401,7 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                 if message == "NAVERLOGIN" {
                     print("NAVERLOGIN")
                     let naverConnection = NaverThirdPartyLoginConnection.getSharedInstance()
-                    naverConnection?.delegate = self
+                    naverConnection?.delegate = self as! NaverThirdPartyLoginConnectionDelegate
                     naverConnection?.requestThirdPartyLogin()
                 }
                 else if message == "KAKAOLOGIN" {
@@ -355,7 +462,7 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                             let controller = MFMessageComposeViewController()
                             controller.body = title! + "\n\n" + content! + "\n\n" +  link_url!
                             controller.recipients = [""]
-                            controller.messageComposeDelegate = self
+                            controller.messageComposeDelegate = self as! MFMessageComposeViewControllerDelegate
                             self.present(controller, animated: true, completion: nil)
                         }
                     }
@@ -376,28 +483,28 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                                 })
                             })
                             /*
-                            // 소셜
-                            feedTemplateBuilder.social = KMTSocialObject(builderBlock: { (socialBuilder) in
-                                socialBuilder.likeCount = 286
-                                socialBuilder.commnentCount = 45
-                                socialBuilder.sharedCount = 845
-                            })
-                            
-                            // 버튼
-                            feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
-                                buttonBuilder.title = "웹으로 보기"
-                                buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                                    linkBuilder.mobileWebURL = URL(string: "https://developers.kakao.com")
-                                })
-                            }))
-                            feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
-                                buttonBuilder.title = "앱으로 보기"
-                                buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                                    linkBuilder.iosExecutionParams = "param1=value1&param2=value2"
-                                    linkBuilder.androidExecutionParams = "param1=value1&param2=value2"
-                                })
-                            }))
-                            */
+                             // 소셜
+                             feedTemplateBuilder.social = KMTSocialObject(builderBlock: { (socialBuilder) in
+                             socialBuilder.likeCount = 286
+                             socialBuilder.commnentCount = 45
+                             socialBuilder.sharedCount = 845
+                             })
+                             
+                             // 버튼
+                             feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
+                             buttonBuilder.title = "웹으로 보기"
+                             buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
+                             linkBuilder.mobileWebURL = URL(string: "https://developers.kakao.com")
+                             })
+                             }))
+                             feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
+                             buttonBuilder.title = "앱으로 보기"
+                             buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
+                             linkBuilder.iosExecutionParams = "param1=value1&param2=value2"
+                             linkBuilder.androidExecutionParams = "param1=value1&param2=value2"
+                             })
+                             }))
+                             */
                         }
                         
                         // 카카오링크 실행
@@ -414,7 +521,7 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                             print("error \(error)")
                             
                         })
- 
+                        
                     }
                     else if(share_type == "KAKAOSTORY")
                     {
@@ -454,7 +561,7 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                         }
                     }
                     else if share_type == "FACEBOOK" {
-
+                        
                         // import FBSDKShareKit 을 이용할경우
                         let cont = FBSDKShareLinkContent()
                         //cont.contentTitle = title!  // 작동안함
@@ -469,61 +576,21 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                         }
                         dialog.shareContent = cont
                         dialog.show()
- 
-/*
-                        // import Social 을 이용할경우
-                        let facebookShare = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-                        if let facebookShare = facebookShare{
-                            facebookShare.setInitialText(title!) // 작동안함
-                            //facebookShare.add(UIImage(named: "iOSDevCenters.jpg")!)
-                            facebookShare.add(URL(string: link_url!))
-                            self.present(facebookShare, animated: true, completion: nil)
-                        }
- */
+                        
+                        /*
+                         // import Social 을 이용할경우
+                         let facebookShare = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+                         if let facebookShare = facebookShare{
+                         facebookShare.setInitialText(title!) // 작동안함
+                         //facebookShare.add(UIImage(named: "iOSDevCenters.jpg")!)
+                         facebookShare.add(URL(string: link_url!))
+                         self.present(facebookShare, animated: true, completion: nil)
+                         }
+                         */
                     }
                 }
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        setNavController()
-        checkNetwork()
-        //sendDeviceInfo()
-        
-        var url = URL(string: common.default_url)
-        if(!sUrl.isEmpty){
-            url = URL(string: sUrl)
-        }
-        
-        let request = URLRequest(url: url!)
-        
-        webView.load(request)
-    }
-    
-    func loadPage(url:String) {
-        let url = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-        let request = URLRequest(url: url!)
-        webView.load(request)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func checkNetwork(){
-        if(CheckNetwork.isConnected()==false)
-        {
-            self.moveToErrorView()
-        }
-    }
-    
-    func moveToErrorView(){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let next = storyboard.instantiateViewController(withIdentifier: "errorView")as! ErrorViewController
-        self.navigationController?.pushViewController(next, animated: false)
-        self.dismiss(animated: false, completion: nil)
     }
     
     func alert(title : String?, msg : String,
@@ -549,18 +616,6 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
         DispatchQueue.main.async {
             self.present(ac, animated: true, completion: nil)
         }
-    }
-    
-    func setNavController(){
-        //상단바 숨기기
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        //페이지변환시 fade효과
-        let transition: CATransition = CATransition()
-        transition.duration = 0.4
-        transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        transition.type = CATransitionType.fade
-        self.navigationController!.view.layer.add(transition, forKey: nil)
     }
     
     func sendDeviceInfo(){
@@ -589,11 +644,17 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
         common.setUD("app_start_yn", "N")
         
         let data = "act=setAppDeviceInfo&device_type=iOS" +
-                    "&device_id="+device_id!+"&device_token="+device_token!+"&device_model="+device_model!+"&app_version="+app_version!
+            "&device_id="+device_id!+"&device_token="+device_token!+"&device_model="+device_model!+"&app_version="+app_version!
         let enc_data = Data(data.utf8).base64EncodedString()
         print("jsNativeToServer(enc_data)")
         webView.evaluateJavaScript("jsNativeToServer('" + enc_data + "')", completionHandler:nil)
         
+    }
+    
+    func loadPage(url:String) {
+        let url = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+        let request = URLRequest(url: url!)
+        webView.load(request)
     }
     
     func sendStepInfo(){
@@ -605,11 +666,11 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
             //healthStore.requestAuthorization(toShare: writeDataTypes as? Set<HKSampleType>, read: readDataTypes as?
             healthStore.requestAuthorization(toShare: nil, read: readDataTypes as?
                 Set<HKObjectType>, completion: { (success, error) in
-                if(!success){
-                    print("error")
-                    
-                    return
-                }
+                    if(!success){
+                        print("error")
+                        
+                        return
+                    }
             })
         }
         
@@ -625,16 +686,9 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
         } catch {
             print(error.localizedDescription)
         }
-
-    }
-    /*
-    func dataTypesToWrite() -> NSSet{
-        let stepsCount = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
         
-        let returnSet = NSSet(objects: stepsCount!)
-        return returnSet
     }
-    */
+    
     func dataTypesToRead() -> NSSet{
         let stepsCount = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
         let returnSet = NSSet(objects: stepsCount!)
@@ -669,14 +723,14 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                     let dateString = dateFormatter.string(from: step_date)
                     
                     let step_count = steps.quantity.doubleValue(for: HKUnit.count())
-
+                    
                     if (self.stepData[dateString]==nil){
                         self.stepData.updateValue(Int(step_count), forKey: dateString)
                     }else{
                         let new_count = Int(step_count) + self.stepData[dateString]!
                         self.stepData.updateValue(new_count, forKey: dateString)
                     }
-
+                    
                     myString = dateString
                     print(step_date)
                     print(dateString)
@@ -690,19 +744,15 @@ class MainViewController: UIViewController, NaverThirdPartyLoginConnectionDelega
                 
                 print(self.stepData)
                 
-
+                
                 
             }
         }
         
         // Don't forget to execute the Query!
         healthStore.execute(stepsSampleQuery)
-   
+        
     }
-
-}
-/*
-extension MainViewController {
     
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let alertController = UIAlertController(title: common.app_name, message: message, preferredStyle: .alert)
@@ -729,57 +779,4 @@ extension MainViewController {
             self.present(alertController, animated: true, completion: nil)
         }
     }
-    
-    @objc func applicationDidBecomeActive(notification: NSNotification) {
-        refreshControl?.beginRefreshing()
-        webView.reload()
-    }
 }
-
-public extension UIDevice {
-    
-    var modelName: String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        
-        switch identifier {
-        case "iPod5,1":                                 return "iPod Touch 5"
-        case "iPod7,1":                                 return "iPod Touch 6"
-        case "iPhone3,1", "iPhone3,2", "iPhone3,3":     return "iPhone 4"
-        case "iPhone4,1":                               return "iPhone 4s"
-        case "iPhone5,1", "iPhone5,2":                  return "iPhone 5"
-        case "iPhone5,3", "iPhone5,4":                  return "iPhone 5c"
-        case "iPhone6,1", "iPhone6,2":                  return "iPhone 5s"
-        case "iPhone7,2":                               return "iPhone 6"
-        case "iPhone7,1":                               return "iPhone 6 Plus"
-        case "iPhone8,1":                               return "iPhone 6s"
-        case "iPhone8,2":                               return "iPhone 6s Plus"
-        case "iPhone9,1", "iPhone9,3":                  return "iPhone 7"
-        case "iPhone9,2", "iPhone9,4":                  return "iPhone 7 Plus"
-        case "iPhone8,4":                               return "iPhone SE"
-        case "iPhone10,1", "iPhone10,4":                return "iPhone 8"
-        case "iPhone10,2", "iPhone10,5":                return "iPhone 8 Plus"
-        case "iPhone10,3", "iPhone10,6":                return "iPhone X"
-        case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":return "iPad 2"
-        case "iPad3,1", "iPad3,2", "iPad3,3":           return "iPad 3"
-        case "iPad3,4", "iPad3,5", "iPad3,6":           return "iPad 4"
-        case "iPad4,1", "iPad4,2", "iPad4,3":           return "iPad Air"
-        case "iPad5,3", "iPad5,4":                      return "iPad Air 2"
-        case "iPad2,5", "iPad2,6", "iPad2,7":           return "iPad Mini"
-        case "iPad4,4", "iPad4,5", "iPad4,6":           return "iPad Mini 2"
-        case "iPad4,7", "iPad4,8", "iPad4,9":           return "iPad Mini 3"
-        case "iPad5,1", "iPad5,2":                      return "iPad Mini 4"
-        case "iPad6,3", "iPad6,4", "iPad6,7", "iPad6,8":return "iPad Pro"
-        case "AppleTV5,3":                              return "Apple TV"
-        case "i386", "x86_64":                          return "Simulator"
-        default:                                        return identifier
-        }
-    }
-    
-}
-*/
