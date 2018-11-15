@@ -270,7 +270,7 @@
                                 <rect key="frame" x="80" y="41.5" width="160" height="21"/>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" highlighted="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="b4x-5c-U5W">
-                                <rect key="frame" x="40" y="82.5" width="240" height="40"/>
+                                <rect key="frame" x="40" y="132.5" width="240" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="gr1-yq-DeG"/>
                                 </constraints>
@@ -279,7 +279,7 @@
                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VQ3-5N-JsB">
-                                <rect key="frame" x="40" y="142.5" width="240" height="40"/>
+                                <rect key="frame" x="40" y="182.5" width="240" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="sx4-av-AKn"/>
                                 </constraints>
@@ -288,7 +288,7 @@
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password confirm" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TtC-wp-Zif">
-                                <rect key="frame" x="40" y="202.5" width="240" height="40"/>
+                                <rect key="frame" x="40" y="232.5" width="240" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="nsU-UJ-RFU"/>
                                 </constraints>
@@ -297,13 +297,22 @@
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nCk-7v-STu">
-                                <rect key="frame" x="40" y="262.5" width="240" height="36"/>
+                                <rect key="frame" x="40" y="282.5" width="240" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="가입하기"/>
                                 <connections>
                                     <action selector="joinBtnClicked:" destination="IFc-GL-mYM" eventType="touchUpInside" id="Sn0-8m-TDm"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ROg-bk-rvP">
+                                <rect key="frame" x="40" y="72.5" width="240" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="ODu-82-DVz"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -311,10 +320,13 @@
                             <constraint firstItem="nCk-7v-STu" firstAttribute="leading" secondItem="XWA-ry-VBO" secondAttribute="leading" constant="40" id="Dme-rF-aMH"/>
                             <constraint firstItem="XWA-ry-VBO" firstAttribute="trailing" secondItem="VQ3-5N-JsB" secondAttribute="trailing" constant="40" id="K7f-LT-EZv"/>
                             <constraint firstItem="KtY-kc-S5k" firstAttribute="centerX" secondItem="9VP-HY-X4i" secondAttribute="centerX" id="MAf-0q-4iy"/>
-                            <constraint firstItem="VQ3-5N-JsB" firstAttribute="top" secondItem="b4x-5c-U5W" secondAttribute="bottom" constant="20" id="Pp8-qS-CQP"/>
-                            <constraint firstItem="nCk-7v-STu" firstAttribute="top" secondItem="TtC-wp-Zif" secondAttribute="bottom" constant="20" id="Qu6-T4-z22"/>
-                            <constraint firstItem="TtC-wp-Zif" firstAttribute="top" secondItem="VQ3-5N-JsB" secondAttribute="bottom" constant="20" id="ViM-fz-KY2"/>
-                            <constraint firstItem="b4x-5c-U5W" firstAttribute="top" secondItem="KtY-kc-S5k" secondAttribute="bottom" constant="20" id="XqE-fB-hc6"/>
+                            <constraint firstItem="ROg-bk-rvP" firstAttribute="top" secondItem="KtY-kc-S5k" secondAttribute="bottom" constant="10" id="Nwn-K6-Vta"/>
+                            <constraint firstItem="VQ3-5N-JsB" firstAttribute="top" secondItem="b4x-5c-U5W" secondAttribute="bottom" constant="10" id="Pp8-qS-CQP"/>
+                            <constraint firstItem="nCk-7v-STu" firstAttribute="top" secondItem="TtC-wp-Zif" secondAttribute="bottom" constant="10" id="Qu6-T4-z22"/>
+                            <constraint firstItem="ROg-bk-rvP" firstAttribute="leading" secondItem="XWA-ry-VBO" secondAttribute="leading" constant="40" id="TEw-Sr-D8U"/>
+                            <constraint firstItem="XWA-ry-VBO" firstAttribute="trailing" secondItem="ROg-bk-rvP" secondAttribute="trailing" constant="40" id="TZn-Tu-05H"/>
+                            <constraint firstItem="TtC-wp-Zif" firstAttribute="top" secondItem="VQ3-5N-JsB" secondAttribute="bottom" constant="10" id="ViM-fz-KY2"/>
+                            <constraint firstItem="b4x-5c-U5W" firstAttribute="top" secondItem="ROg-bk-rvP" secondAttribute="bottom" constant="10" id="XqE-fB-hc6"/>
                             <constraint firstItem="XWA-ry-VBO" firstAttribute="trailing" secondItem="b4x-5c-U5W" secondAttribute="trailing" constant="40" id="axC-pk-txy"/>
                             <constraint firstItem="XWA-ry-VBO" firstAttribute="trailing" secondItem="nCk-7v-STu" secondAttribute="trailing" constant="40" id="fef-bB-17h"/>
                             <constraint firstItem="TtC-wp-Zif" firstAttribute="leading" secondItem="XWA-ry-VBO" secondAttribute="leading" constant="40" id="i6q-We-uJY"/>
@@ -327,6 +339,7 @@
                     <navigationItem key="navigationItem" id="sy3-2j-JWK"/>
                     <connections>
                         <outlet property="email" destination="b4x-5c-U5W" id="uDb-UT-BPo"/>
+                        <outlet property="name" destination="ROg-bk-rvP" id="J6P-Q5-gdI"/>
                         <outlet property="pw1" destination="VQ3-5N-JsB" id="IXZ-7g-v4X"/>
                         <outlet property="pw2" destination="TtC-wp-Zif" id="0Oj-eV-toI"/>
                     </connections>
