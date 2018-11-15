@@ -22,6 +22,8 @@ class SWRearTableVC: UITableViewController {
     
     override func viewDidLoad() {
         
+        let login_info = common.getUD("login_info") ?? ""
+        
         TableArray = [
             "홈[Home]",
             "몸짱너머",
@@ -29,6 +31,12 @@ class SWRearTableVC: UITableViewController {
             "쇼미더머니",
             "만보기"
         ]
+        
+        if(login_info.isEmpty){
+            TableArray.append("로그인")
+        }else{
+            TableArray.append("로그아웃")
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -59,23 +67,30 @@ class SWRearTableVC: UITableViewController {
         
         switch selTitle {
         case "홈[Home]" :
-            url = common.default_url
+            url = "/"
             
         case "몸짱너머" :
-            url = common.default_url + "webzine/list.php"
+            url = "/webzine/list.php"
             
         case "친구초대" :
-            url = common.default_url + "member/body_invitation.php"
+            url = "/member/body_invitation.php"
             
         case "쇼미더머니" :
-            url = common.default_url + "bbs/?b_code=gift"
+            url = "/bbs/?b_code=gift"
             
         case "만보기" :
-            url = common.default_url + "login/login.php"
+            url = "/step.php"
+            
+        case "로그인" :
+            url = "/login/login.php"
+            
+        case "로그아웃" :
+            url = "/login/logout.php"
+            common.setUD("login_info", "")
         
         default :
             title = "홈[Home]"
-            url = common.default_url
+            url = "/"
             
         }
         

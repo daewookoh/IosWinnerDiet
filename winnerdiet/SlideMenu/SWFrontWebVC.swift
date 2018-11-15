@@ -64,7 +64,7 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     var id = ""
     var gender = ""
     var name = ""
-    
+
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -108,9 +108,10 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
             webViewUrl = common.default_url
         }
         
-        if(webViewUrl.range(of: "login.php") != nil) {
-            self.moveToLoginView()
-        }
+
+        /*
+
+         */
             
         if let theWebView = webView{
             loadPage(url:webViewUrl)
@@ -122,7 +123,28 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
             theWebView.scrollView.addSubview(self.refreshControl!)
             //theWebView.UIDelegate = self
             myViewForWeb.addSubview(theWebView)
-            
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setNavController()
+        checkNetwork()
+        
+        let login_info = common.getUD("login_info") ?? ""
+        
+        if(login_info.isEmpty){
+            self.moveToLoginView()
+        }else if(webViewUrl.range(of: "login/login.php") != nil) {
+            self.moveToLoginView()
+        }else{
+            if(selUrl.range(of: "login/logout.php") != nil)
+            {
+                selUrl = "/";
+            }
+            let login_url = common.api_url+"?action=autoLogin&s_url="+selUrl+"&login_info="+login_info
+            let url = URL(string: login_url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+            let request = URLRequest(url: url!)
+            webView.load(request)
         }
         
     }
@@ -207,7 +229,7 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     }
     
     func moveToLoginView(){
-        let next = storyboard?.instantiateViewController(withIdentifier: "LoginVC")as! LoginVC
+        let next = storyboard?.instantiateViewController(withIdentifier: "LoginNav")as! UINavigationController
         self.present(next, animated:true, completion:nil)
     }
     
@@ -293,21 +315,7 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     // MARK: WKUIDelegate methods
     
 
-    override func viewWillAppear(_ animated: Bool) {
-        setNavController()
-        checkNetwork()
-        
-        let loginUrl = common.getUD("loginUrl") ?? ""
-        
-        print(loginUrl)
-        
-        if(!loginUrl.isEmpty)
-        {
-            print("A")
-            loadPage(url: loginUrl)
-        }
 
-    }
     
     @objc func reloadWebView(_ notification: Notification?) {
         refreshControl?.beginRefreshing()
@@ -421,197 +429,17 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
                 
                 print(message)
                 
-                if message == "NAVERLOGIN" {
-                    print("NAVERLOGIN")
-                    let naverConnection = NaverThirdPartyLoginConnection.getSharedInstance()
-                    naverConnection?.delegate = self as! NaverThirdPartyLoginConnectionDelegate
-                    naverConnection?.requestThirdPartyLogin()
+                let data = Data(message.utf8)
+                let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
+                
+                let exec = json["exec"] as? String
+                let value = json["value"] as? String
+                
+                if(exec=="login_info")
+                {
+                    common.setUD("login_info",value ?? "")
                 }
-                else if message == "KAKAOLOGIN" {
-                    print("KAKAOLOGIN")
-                    let session: KOSession = KOSession.shared();
-                    if session.isOpen() {
-                        session.close()
-                    }
-                    session.presentingViewController = self
-                    session.open(completionHandler: { (error) -> Void in
-                        if error != nil{
-                            print(error?.localizedDescription as Any)
-                        }else if session.isOpen() == true{
-                            
-                            KOSessionTask.userMeTask(completion: { (error, me) in
-                                if let error = error as NSError? {
-                                    self.alert(title: "kakaologin_error", msg: error.description)
-                                } else if let me = me as KOUserMe? {
-                                    print("id: \(String(describing: me.id))")
-                                    
-                                    self.name = (me.properties!["nickname"])!
-                                    self.email = (me.account?.email)!
-                                    self.id = me.id!
-                                    
-                                    let url = self.common.sns_callback_url +
-                                        "?login_type=kakao" +
-                                        "&success_yn=Y" +
-                                        "&id=" + self.id +
-                                        "&email=" + self.email +
-                                        "&name=" + self.name
-                                    
-                                    print(url)
-                                    
-                                    self.loadPage(url: url)
-                                    
-                                } else {
-                                    print("has no id")
-                                }
-                            })
-                        }else{
-                            print("isNotOpen")
-                        }
-                    })
-                } else {
-                    let data = Data(message.utf8)
-                    let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
-                    
-                    let share_type = json["share_type"] as? String
-                    
-                    let link_url = json["link_url"] as? String
-                    let title = json["title"] as? String
-                    let img_url = json["img_url"] as? String
-                    let content = json["content"] as? String
-                    
-                    if(share_type == "MMS")
-                    {
-                        if (MFMessageComposeViewController.canSendText()) {
-                            let controller = MFMessageComposeViewController()
-                            controller.body = title! + "\n\n" + content! + "\n\n" +  link_url!
-                            controller.recipients = [""]
-                            controller.messageComposeDelegate = self as! MFMessageComposeViewControllerDelegate
-                            self.present(controller, animated: true, completion: nil)
-                        }
-                    }
-                    else if(share_type == "KAKAO")
-                    {
-                        // Feed 타입 템플릿 오브젝트 생성
-                        let template = KMTFeedTemplate { (feedTemplateBuilder) in
-                            
-                            // 컨텐츠
-                            feedTemplateBuilder.content = KMTContentObject(builderBlock: { (contentBuilder) in
-                                contentBuilder.title = title!
-                                contentBuilder.desc = content!
-                                contentBuilder.imageURL = URL(string: img_url!)!
-                                contentBuilder.imageWidth = 400
-                                contentBuilder.imageHeight = 400
-                                contentBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                                    linkBuilder.mobileWebURL = URL(string: link_url!)
-                                })
-                            })
-                            /*
-                             // 소셜
-                             feedTemplateBuilder.social = KMTSocialObject(builderBlock: { (socialBuilder) in
-                             socialBuilder.likeCount = 286
-                             socialBuilder.commnentCount = 45
-                             socialBuilder.sharedCount = 845
-                             })
-                             
-                             // 버튼
-                             feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
-                             buttonBuilder.title = "웹으로 보기"
-                             buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                             linkBuilder.mobileWebURL = URL(string: "https://developers.kakao.com")
-                             })
-                             }))
-                             feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
-                             buttonBuilder.title = "앱으로 보기"
-                             buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                             linkBuilder.iosExecutionParams = "param1=value1&param2=value2"
-                             linkBuilder.androidExecutionParams = "param1=value1&param2=value2"
-                             })
-                             }))
-                             */
-                        }
-                        
-                        // 카카오링크 실행
-                        KLKTalkLinkCenter.shared().sendDefault(with: template, success: { (warningMsg, argumentMsg) in
-                            
-                            // 성공
-                            print("warning message: \(String(describing: warningMsg))")
-                            print("argument message: \(String(describing: argumentMsg))")
-                            
-                        }, failure: { (error) in
-                            
-                            // 실패
-                            self.alert(title: "ERROR", msg:error.localizedDescription)
-                            print("error \(error)")
-                            
-                        })
-                        
-                    }
-                    else if(share_type == "KAKAOSTORY")
-                    {
-                        if !SnsLinkHelper.canOpenStoryLink() {
-                            SnsLinkHelper.openiTunes("itms://itunes.apple.com/app/id486244601")
-                            return
-                        }
-                        let bundle = Bundle.main
-                        var postMessage: String!
-                        if let bundleId = bundle.bundleIdentifier, let appVersion: String = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
-                            let appName: String = bundle.object(forInfoDictionaryKey: "CFBundleName") as? String {
-                            postMessage = SnsLinkHelper.makeStoryLink(title! + " " + link_url!, appBundleId: bundleId, appVersion: appVersion, appName: appName, scrapInfo: nil)
-                        }
-                        if let urlString = postMessage {
-                            _ = SnsLinkHelper.openSNSLink(urlString)
-                        }
-                    }
-                    else if share_type == "LINE" {
-                        if !SnsLinkHelper.canOpenLINE() {
-                            SnsLinkHelper.openiTunes("itms://itunes.apple.com/app/id443904275")
-                            return
-                        }
-                        let postMessage = SnsLinkHelper.makeLINELink(title! + " " + link_url!)
-                        if let urlString = postMessage {
-                            _ = SnsLinkHelper.openSNSLink(urlString)
-                        }
-                        
-                    }
-                    else if share_type == "BAND" {
-                        if !SnsLinkHelper.canOpenBAND() {
-                            SnsLinkHelper.openiTunes("itms://itunes.apple.com/app/id542613198")
-                            return
-                        }
-                        let postMessage = SnsLinkHelper.makeBANDLink(title! + " " + link_url!, link_url!)
-                        if let urlString = postMessage {
-                            _ = SnsLinkHelper.openSNSLink(urlString)
-                        }
-                    }
-                    else if share_type == "FACEBOOK" {
-                        
-                        // import FBSDKShareKit 을 이용할경우
-                        let cont = FBSDKShareLinkContent()
-                        //cont.contentTitle = title!  // 작동안함
-                        //cont.contentDescription = content! // 작동안함
-                        cont.contentURL = URL(string: link_url!)
-                        
-                        let dialog = FBSDKShareDialog()
-                        dialog.fromViewController = self
-                        dialog.mode = FBSDKShareDialogMode.native
-                        if !dialog.canShow() {
-                            dialog.mode = FBSDKShareDialogMode.automatic
-                        }
-                        dialog.shareContent = cont
-                        dialog.show()
-                        
-                        /*
-                         // import Social 을 이용할경우
-                         let facebookShare = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-                         if let facebookShare = facebookShare{
-                         facebookShare.setInitialText(title!) // 작동안함
-                         //facebookShare.add(UIImage(named: "iOSDevCenters.jpg")!)
-                         facebookShare.add(URL(string: link_url!))
-                         self.present(facebookShare, animated: true, completion: nil)
-                         }
-                         */
-                    }
-                }
+                
             }
         }
     }

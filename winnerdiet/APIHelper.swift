@@ -19,6 +19,7 @@ class APIHelper {
     }
     
     func connectHttpAsync(resourceURL: String) {
+
         let common = Common()
         // 세션 생성, 환경설정
         let defaultSession = URLSession(configuration: .default)
@@ -58,12 +59,17 @@ class APIHelper {
                     
                     let jsonResult = self.jsonEncode(text: str)
                     
-                    let result_code = jsonResult?["result_code"] as? String
-                    print(result_code)
+                    var result_code = jsonResult?["result_code"] as! String
+                    //print(result_code)
                     
-                    let result_msg = jsonResult?["result_msg"] as? String
-                    print(result_msg)
+                    let result_msg = jsonResult?["result_msg"] as! String
+                    //print(result_msg)
                     
+                    if(result_code=="0000"){
+                        
+                    }else{
+
+                    }
                 }
 
             }

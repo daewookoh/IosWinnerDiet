@@ -10,6 +10,9 @@ pod 'Firebase/Messaging'
 pod 'FBSDKCoreKit'
 pod 'FBSDKShareKit'
 pod 'FBSDKLoginKit'
+pod 'Alamofire'
+pod 'SwiftyJSON'
+pod 'Validator'
 
   # Pods for winnerdiet
 
