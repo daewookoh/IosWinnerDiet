@@ -84,7 +84,7 @@ class JoinVC: UIViewController {
             "mb_password": my_pw1
         ]
         
-        print(parameters)
+        //print(parameters)
         
         Alamofire.request(
             self.common.api_url,

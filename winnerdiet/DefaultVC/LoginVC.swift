@@ -8,11 +8,21 @@
 
 import UIKit
 import WebKit
+import Alamofire
+import SwiftyJSON
+import Validator
 
 class LoginVC: UIViewController, XMLParserDelegate, NaverThirdPartyLoginConnectionDelegate {
 
     let common = Common()
     let swFrontWebView = SWFrontWebVC()
+    
+    struct ValidationError: Error {
+        let message: String
+        init(message m: String) {
+            message = m
+        }
+    }
     
     @IBOutlet weak var myEmail: UITextField!
     @IBOutlet weak var myPassword: UITextField!
@@ -25,26 +35,77 @@ class LoginVC: UIViewController, XMLParserDelegate, NaverThirdPartyLoginConnecti
         let a = myEmail.text!
         let b = myPassword.text!
         
-        connectHttpAsync(resourceURL: common.api_url + "?action=checkLogin&type=email&a="+a+"&b="+b)
+        let ruleEmail = ValidationRulePattern(pattern: EmailValidationPattern.standard, error: ValidationError(message: "😫"))
+        let ruleLength = ValidationRuleLength(min: 5, max: 10, error: ValidationError(message: "😫"))
         
-        /*
-        if(myEmail.text=="test@test.com" && myPassword.text=="rheodn82"){
-            
-        }else{
-            let alertController = UIAlertController(title:"정확한 정보를 입력해 주세요",message:nil,preferredStyle:.alert)
-            self.present(alertController,animated:true,completion:{Timer.scheduledTimer(withTimeInterval: 0.5, repeats:false, block: {_ in
-                self.dismiss(animated: true, completion: nil)
-            })})
+        let resultEmail = a.validate(rule: ruleEmail)
+        
+        switch resultEmail {
+        case .valid:
+            print("😀")
+            break
+        case .invalid: self.showToast(message: "이메일을 정확히 입력해 주세요")
+        return
+            break
         }
- */
+        
+        let resultPassword = b.validate(rule: ruleLength)
+        
+        switch resultPassword {
+        case .valid:
+            print("😀")
+            break
+        case .invalid: self.showToast(message: "패스워드는 5~10자리로 입력해 주세요")
+        return
+            break
+        }
+        
+        let parameters: Parameters = [
+            "action": "checkLogin",
+            "type": "email",
+            "a": a,
+            "b": b
+        ]
+        
+        Alamofire.request(
+            self.common.api_url,
+            method: .post,
+            parameters: parameters,
+            encoding: URLEncoding.default
+            //headers: ["Content-Type":"application/json", "Accept":"application/json"] // post에서 작동안함
+            )
+            .validate(statusCode: 200..<300)
+            .responseJSON {
+                response in
+                if let data = response.result.value
+                {
+                    print(data)
+                    
+                    let json = JSON(data)
+                    
+                    let result_code = json["result_code"].string ?? ""
+                    let result_msg = json["result_msg"].string ?? ""
+                    
+                    if(result_code == "0000"){
+                        let login_info = json["login_info"].string ?? ""
+                        self.common.setUD("login_info", login_info)
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                    else{
+                        self.showToast(message: result_msg)
+                    }
+ 
+                }
+        }
+        
+        //connectHttpAsync(resourceURL: common.api_url + "?action=checkLogin&type=email&a="+a+"&b="+b)
+        
     }
     
     @IBAction func naverLoginBtnClicked(_ sender: Any) {
         let naverConnection = NaverThirdPartyLoginConnection.getSharedInstance()
         naverConnection?.delegate = self as! NaverThirdPartyLoginConnectionDelegate
         naverConnection?.requestThirdPartyLogin()
-        
-
     }
 
     
@@ -134,10 +195,45 @@ class LoginVC: UIViewController, XMLParserDelegate, NaverThirdPartyLoginConnecti
                         let request = URLRequest(url: my_url!)
                         self.hiddenWebView.loadRequest(request)
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // change 2 to desired number of seconds
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             if(!self.id.isEmpty)
                             {
-                                self.connectHttpAsync(resourceURL: self.common.api_url + "?action=checkLogin&type=naver&a="+self.id)
+                                let parameters: Parameters = [
+                                    "action": "checkLogin",
+                                    "type": "naver",
+                                    "a": self.id
+                                ]
+                                
+                                Alamofire.request(
+                                    self.common.api_url,
+                                    method: .post,
+                                    parameters: parameters,
+                                    encoding: URLEncoding.default
+                                    //headers: ["Content-Type":"application/json", "Accept":"application/json"] // post에서 작동안함
+                                    )
+                                    .validate(statusCode: 200..<300)
+                                    .responseJSON {
+                                        response in
+                                        if let data = response.result.value
+                                        {
+                                            print(data)
+                                            
+                                            let json = JSON(data)
+                                            
+                                            let result_code = json["result_code"].string ?? ""
+                                            let result_msg = json["result_msg"].string ?? ""
+                                            
+                                            if(result_code == "0000"){
+                                                let login_info = json["login_info"].string ?? ""
+                                                self.common.setUD("login_info", login_info)
+                                                self.dismiss(animated: true, completion: nil)
+                                            }
+                                            else{
+                                                self.showToast(message: result_msg)
+                                            }
+                                            
+                                        }
+                                }
                             }
                         }
                         //self.moveToSWFrontWebVCWithUrl(url: url)
@@ -178,79 +274,4 @@ class LoginVC: UIViewController, XMLParserDelegate, NaverThirdPartyLoginConnecti
     }
     // 네이버 로그인 끝
 
-    func connectHttpAsync(resourceURL: String) {
-        
-        print(resourceURL)
-        // 세션 생성, 환경설정
-        let defaultSession = URLSession(configuration: .default)
-        
-        guard let url = URL(string: "\(resourceURL)") else {
-            print("URL is nil")
-            return
-        }
-        
-        // Request
-        let request = URLRequest(url: url)
-        
-        // dataTask
-        let dataTask = defaultSession.dataTask(with: request) { data, response, error in
-            // getting Data Error
-            guard error == nil else {
-                print("Error occur: \(String(describing: error))")
-                return
-            }
-            
-            if let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 {
-                // 통신에 성공한 경우 data에 Data 객체가 전달됩니다.
-                
-                // 받아오는 데이터가 json 형태일 경우,
-                // json을 serialize하여 json 데이터를 swift 데이터 타입으로 변환
-                // json serialize란 json 데이터를 String 형태로 변환하여 Swift에서 사용할 수 있도록 하는 것을 말합니다.
-                guard (try? JSONSerialization.jsonObject(with: data, options: [])) != nil else {
-                    print(resourceURL)
-                    print("No Json Result")
-                    return
-                }
-                
-                // 원하는 작업
-                if let strData = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                    let str = String(strData)
-                    print(str)
-                    
-                    let jsonResult = self.jsonEncode(text: str)
-                    
-                    let result_code = jsonResult?["result_code"] as! String
-                    //print(result_code)
-                    
-                    let result_msg = jsonResult?["result_msg"] as! String
-                    //print(result_msg)
-                    
-                    if(result_code=="0000"){
-                        let login_info = jsonResult?["login_info"] as! String
-                        self.common.setUD("login_info", login_info)
-                        self.dismiss(animated: true, completion: nil)
-                    }else{
-                        DispatchQueue.main.async {
-                            self.showToast(message: result_msg)
-                        }
-                        
-                    }
-                }
-                
-            }
-        }
-        dataTask.resume()
-    }
-    
-    func jsonEncode(text: String) -> [String: Any]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options:[]) as? [String: Any]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
-    }
-    
 }
