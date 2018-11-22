@@ -13,6 +13,9 @@ pod 'FBSDKLoginKit'
 pod 'Alamofire'
 pod 'SwiftyJSON'
 pod 'Validator'
+pod 'Validator'
+pod 'iCarousel'
+pod 'Alamofire-Synchronous'
 
   # Pods for winnerdiet
 

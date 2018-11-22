@@ -15,30 +15,10 @@ import FBSDKShareKit
 import HealthKit
 
 @available(iOS 8.0, *)
-class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, XMLParserDelegate, NaverThirdPartyLoginConnectionDelegate{
+class NavigationWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, XMLParserDelegate{
 
-    @IBOutlet weak var myTitle: UILabel!
     @IBOutlet weak var myViewForWeb: UIView!
-    
-    @IBAction func backBtnClicked(_ sender: Any) {
 
-        let url = webView.url?.absoluteString
-        
-        if(url==common.default_url){
-            exit(0)
-        }else if(url?.range(of: "step.php") != nil){
-            loadPage(url: common.default_url)
-        }else if(webView.canGoBack){
-            webView.goBack()
-        }else{
-            loadPage(url: common.default_url)
-        }
-    }
-    
-    @IBAction func menuBtnClicked(_ sender: Any) {
-        self.revealViewController().revealToggle(self)
-    }
-    
     let common = Common()
     
     var refreshControl:UIRefreshControl?
@@ -55,36 +35,14 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     var myUrl:String = ""
     var alertController: UIAlertController!
     var webView: WKWebView!
-    //var contentController = WKUserContentController()
     var createWebView: WKWebView!
-    
-    // 네이버 로그인
-    var foundCharacters = "";
-    var email = ""
-    var id = ""
-    var gender = ""
-    var name = ""
 
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
         //webView.uiDelegate = self // js alert 사용을 위해 필요
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapFunction))
-        myTitle.isUserInteractionEnabled = true
-        myTitle.addGestureRecognizer(tap)
-        
-        //App Delegate 에서 DidBecomeActive감지
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadWebView(_:)), name: NSNotification.Name("ReloadWebView"), object: nil)
-        
-        // 슬라이딩 메뉴
-        self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        
-        self.dismiss(animated: true, completion: nil)
-        
-        myTitle.backgroundColor = UIColor.init(red: 81/255, green: 61/255, blue: 238/255, alpha: 1)
-        
-        
+
         let contentController = WKUserContentController()
         contentController.add(self, name: common.js_name)
         
@@ -107,12 +65,7 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
         {
             webViewUrl = common.default_url
         }
-        
 
-        /*
-
-         */
-            
         if let theWebView = webView{
             loadPage(url:webViewUrl)
             theWebView.uiDelegate = self
@@ -127,7 +80,6 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        setNavController()
         checkNetwork()
         
         let login_info = common.getUD("login_info") ?? ""
@@ -168,11 +120,6 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
         view.addSubview(createWebView!)
         
         return createWebView!
-        
-        /* 현재 창에서 열고 싶은 경우
-         self.webView.load(navigationAction.request)
-         return nil
-         */
     }
     
     func webViewDidClose(_ webView: WKWebView) {
@@ -190,20 +137,7 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     @objc func tapFunction(){
         loadPage(url: common.default_url)
     }
-    
-    func setNavController(){
-        //상단바 숨기기
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        /*
-        //페이지변환시 fade효과
-        let transition: CATransition = CATransition()
-        transition.duration = 0.4
-        transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        transition.type = CATransitionType.fade
-        self.navigationController!.view.layer.add(transition, forKey: nil)
-        */
-    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -314,107 +248,14 @@ class SWFrontWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
     
     // MARK: WKUIDelegate methods
     
-
-
+    
+    
     
     @objc func reloadWebView(_ notification: Notification?) {
         refreshControl?.beginRefreshing()
         webView.reload()
     }
-
     
-
-    
-    
-    // 로그인전
-    // 로그인 토큰이 없는 경우, 로그인 화면을 오픈한다.
-    func oauth20ConnectionDidOpenInAppBrowser(forOAuth request: URLRequest!) {
-        // Open Naver SignIn View Controller
-        let naverSignInViewController = NLoginThirdPartyOAuth20InAppBrowserViewController(request: request)!
-        present(naverSignInViewController, animated: true, completion: nil)
-    }
-    
-    // 로그인후
-    func oauth20ConnectionDidFinishRequestACTokenWithRefreshToken() {
-        getNaverDataFromURL()
-    }
-    
-    func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
-        getNaverDataFromURL()
-    }
-    
-    func oauth20ConnectionDidFinishDeleteToken() {
-        // Do Nothing
-    }
-    
-    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
-        // Do Nothing
-    }
-    
-    func getNaverDataFromURL() {
-        
-        // Naver SignIn Success
-        
-        let loginConn = NaverThirdPartyLoginConnection.getSharedInstance()
-        let tokenType = loginConn?.tokenType
-        let accessToken = loginConn?.accessToken
-        
-        // Get User Profile
-        if let url = URL(string: "https://apis.naver.com/nidlogin/nid/getUserProfile.xml") {
-            if tokenType != nil && accessToken != nil {
-                let authorization = "\(tokenType!) \(accessToken!)"
-                var request = URLRequest(url: url)
-                
-                request.setValue(authorization, forHTTPHeaderField: "Authorization")
-                let dataTask = URLSession.shared.dataTask(with: request) {(data, response, error) in
-                    if let str = String(data: data!, encoding: .utf8) {
-                        
-                        var parser = XMLParser()
-                        parser = XMLParser(data: data!)
-                        parser.delegate = self
-                        parser.parse()
-                        
-                        print("\n"+self.id+"\n"+self.gender+"\n"+self.name+"\n"+self.email+"\n")
-                        
-                        print(str)
-                        
-                        let url = self.common.sns_callback_url +
-                            "?login_type=naver" +
-                            "&success_yn=Y" +
-                            "&id=" + self.id +
-                            "&gender=" + self.gender +
-                            "&name=" + self.name +
-                            "&email=" + self.email
-                        self.loadPage(url: url)
-                        
-                        // Naver Sign Out
-                        //loginConn?.resetToken()
-                    }
-                }
-                dataTask.resume()
-            }
-        }
-        
-    }
-    
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        if elementName == "id" { foundCharacters = "" }
-        else if elementName == "gender" { foundCharacters = "" }
-        else if elementName == "name" { foundCharacters = "" }
-        else if elementName == "email" { foundCharacters = "" }
-    }
-    
-    func parser(_ parser: XMLParser, foundCharacters string: String) {
-        foundCharacters += string
-    }
-    
-    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        if elementName == "id" { id = foundCharacters }
-        else if elementName == "gender" { gender = foundCharacters }
-        else if elementName == "name" { name = foundCharacters }
-        else if elementName == "email" { email = foundCharacters }
-    }
-    // 네이버 로그인 끝
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         

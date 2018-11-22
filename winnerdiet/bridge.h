@@ -20,4 +20,6 @@
 
 #import "SWRevealViewController.h"
 
+#import "iCarousel.h"
+
 #endif /* bridge_h */

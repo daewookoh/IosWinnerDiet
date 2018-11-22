@@ -124,6 +124,10 @@ class LoginVC: UIViewController, XMLParserDelegate, NaverThirdPartyLoginConnecti
         naverLoginBtn.layer.cornerRadius = 5
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
