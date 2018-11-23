@@ -14,6 +14,7 @@ class Common {
     let app_name:String = "WinnerDiet"
     let default_url:String = "http://m.dreamteams.co.kr/"
     let api_url:String = "http://m.dreamteams.co.kr/app/api.php"
+    let share_url:String = "http://www.winnerdiet.co.kr"
     let sns_callback_url:String = "http://m.dreamteams.co.kr/sns/callback_from_app.php"
     let user_agent:String = "dreamteams_app_ios"
     let js_name:String = "DreamteamsApp"

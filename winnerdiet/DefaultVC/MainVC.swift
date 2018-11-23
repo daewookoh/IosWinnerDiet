@@ -10,8 +10,10 @@ import UIKit
 import Alamofire
 import Alamofire_Synchronous
 import SwiftyJSON
+import FBSDKShareKit
+import MessageUI
 
-class MainVC: UIViewController, iCarouselDelegate,iCarouselDataSource {
+class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessageComposeViewControllerDelegate {
 
     let common = Common()
     
@@ -29,6 +31,92 @@ class MainVC: UIViewController, iCarouselDelegate,iCarouselDataSource {
     @IBOutlet weak var myCarousel: iCarousel!
     @IBOutlet weak var myTitle: UIButton!
     
+    @IBAction func fbBtnClicked(_ sender: Any) {
+        // import FBSDKShareKit 을 이용할경우
+        let cont = FBSDKShareLinkContent()
+        //cont.contentTitle = title!  // 작동안함
+        //cont.contentDescription = content! // 작동안함
+        cont.contentURL = URL(string: common.share_url)
+        
+        let dialog = FBSDKShareDialog()
+        dialog.fromViewController = self
+        dialog.mode = FBSDKShareDialogMode.native
+        if !dialog.canShow() {
+            dialog.mode = FBSDKShareDialogMode.automatic
+        }
+        dialog.shareContent = cont
+        dialog.show()
+    }
+    
+    @IBAction func bandBtnClicked(_ sender: Any) {
+        if !SnsLinkHelper.canOpenBAND() {
+            SnsLinkHelper.openiTunes("itms://itunes.apple.com/app/id1441615512")
+            return
+        }
+        let postMessage = SnsLinkHelper.makeBANDLink("위너다이어트 " + common.share_url, common.share_url)
+        if let urlString = postMessage {
+            _ = SnsLinkHelper.openSNSLink(urlString)
+        }
+    }
+    
+    @IBAction func ktalkBtnClicked(_ sender: Any) {
+        // Feed 타입 템플릿 오브젝트 생성
+        let template = KMTFeedTemplate { (feedTemplateBuilder) in
+            
+            // 컨텐츠
+            feedTemplateBuilder.content = KMTContentObject(builderBlock: { (contentBuilder) in
+                contentBuilder.title = "위너다이어트"
+                contentBuilder.desc = self.common.share_url
+                contentBuilder.imageURL = URL(string: self.common.share_url+"/images/winner512.png")!
+                contentBuilder.imageWidth = 400
+                contentBuilder.imageHeight = 400
+                contentBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
+                    linkBuilder.mobileWebURL = URL(string: "http://www.winnerdiet.co.kr")
+                })
+            })
+            
+        }
+        
+        // 카카오링크 실행
+        KLKTalkLinkCenter.shared().sendDefault(with: template, success: { (warningMsg, argumentMsg) in
+            
+            // 성공
+            print("warning message: \(String(describing: warningMsg))")
+            print("argument message: \(String(describing: argumentMsg))")
+            
+        }, failure: { (error) in
+            
+            // 실패
+            print("error \(error)")
+            
+        })
+    }
+    
+    @IBAction func kstoryBtnClicked(_ sender: Any) {
+        if !SnsLinkHelper.canOpenStoryLink() {
+            SnsLinkHelper.openiTunes("itms://itunes.apple.com/app/id1441615512")
+            return
+        }
+        let bundle = Bundle.main
+        var postMessage: String!
+        if let bundleId = bundle.bundleIdentifier, let appVersion: String = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
+            let appName: String = bundle.object(forInfoDictionaryKey: "CFBundleName") as? String {
+            postMessage = SnsLinkHelper.makeStoryLink("위너 다이어트 " + self.common.share_url, appBundleId: bundleId, appVersion: appVersion, appName: appName, scrapInfo: nil)
+        }
+        if let urlString = postMessage {
+            _ = SnsLinkHelper.openSNSLink(urlString)
+        }
+    }
+    
+    @IBAction func mmsBtnClicked(_ sender: Any) {
+        if (MFMessageComposeViewController.canSendText()) {
+            let controller = MFMessageComposeViewController()
+            controller.body = "위너다이어트\n\n함께 운동하실까요?\n\n" +  common.share_url
+            controller.recipients = [""]
+            controller.messageComposeDelegate = self
+            self.present(controller, animated: true, completion: nil)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -244,17 +332,23 @@ class MainVC: UIViewController, iCarouselDelegate,iCarouselDataSource {
         print(sender.tag)
         switch sender.tag {
         
-            case 3 :
-                moveToWebViewWithUrl(url:common.default_url + "/step.php")
+        case 1 :
+            moveToWebViewWithUrl(url:common.default_url + "/winner_diet.php")
             
-            case 4 :
-                moveToWebViewWithUrl(url:common.default_url + "/webzine/list.php")
+        case 2 :
+            moveToWebViewWithUrl(url:common.default_url + "/winner_walking.php")
             
-            case 5 :
-                moveToWebViewWithUrl(url:common.default_url + "/member/body_invitation.php")
+        case 3 :
+            moveToWebViewWithUrl(url:common.default_url + "/step.php")
+            
+        case 4 :
+            moveToWebViewWithUrl(url:common.default_url + "/webzine/list.php")
+            
+        case 5 :
+            moveToWebViewWithUrl(url:common.default_url + "/member/body_invitation.php")
 
-            default:
-                print("default")
+        default:
+            print("default")
             
         }
     }
@@ -264,6 +358,10 @@ class MainVC: UIViewController, iCarouselDelegate,iCarouselDataSource {
         let next = storyboard.instantiateViewController(withIdentifier: "NavigationWebVC")as! NavigationWebVC
         next.selUrl = url
         self.navigationController?.pushViewController(next, animated: false)
+    }
+    
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
