@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0E6944F6A6674A3317AB4FD3 /* Pods_winnerdietUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 779F2D79BF2A68FBA6F6E8DA /* Pods_winnerdietUITests.framework */; };
 		3F7EFF2419B17112833F9C15 /* Pods_winnerdietTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C33F7FF25E0F8F6FC37A74 /* Pods_winnerdietTests.framework */; };
+		4C03DD5821AB889B0093C444 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C03DD5721AB889B0093C444 /* Kingfisher.framework */; };
 		4C0FE09121A6712500326118 /* NavigationWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0FE09021A6712500326118 /* NavigationWebVC.swift */; };
 		4C2C9FE021A4DE980019723D /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2C9FDF21A4DE980019723D /* MainVC.swift */; };
 		4C82A36C2199031900C87602 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A36A2199031900C87602 /* SWRevealViewController.m */; };
@@ -69,6 +70,7 @@
 		0C7DCAE22B3F69E5C4B1C43C /* Pods_winnerdiet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_winnerdiet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		313745DA682F5258CC6308BB /* Pods-winnerdietUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-winnerdietUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-winnerdietUITests/Pods-winnerdietUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4AAF1B616E29B72515E51ED1 /* Pods-winnerdietTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-winnerdietTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-winnerdietTests/Pods-winnerdietTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4C03DD5721AB889B0093C444 /* Kingfisher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Kingfisher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C0FE09021A6712500326118 /* NavigationWebVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationWebVC.swift; sourceTree = "<group>"; };
 		4C2C9FDF21A4DE980019723D /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		4C2C9FE421A4FF5F0019723D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C03DD5821AB889B0093C444 /* Kingfisher.framework in Frameworks */,
 				4CA922E4219D03F600F3FB38 /* Validator.framework in Frameworks */,
 				4CA922DE219CFFA100F3FB38 /* Alamofire.framework in Frameworks */,
 				4CA922E2219CFFA100F3FB38 /* SwiftyJSON.framework in Frameworks */,
@@ -281,6 +284,7 @@
 		FD3F8A4B59D30C4CE8F8952D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C03DD5721AB889B0093C444 /* Kingfisher.framework */,
 				4CF27D0B21A507D700FE98C0 /* iCarousel.h */,
 				4CF27D0C21A507D700FE98C0 /* iCarousel.m */,
 				4C2C9FE421A4FF5F0019723D /* iCarousel.framework */,
@@ -458,6 +462,7 @@
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKShareKit/FBSDKShareKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/Validator/Validator.framework",
@@ -473,6 +478,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Validator.framework",

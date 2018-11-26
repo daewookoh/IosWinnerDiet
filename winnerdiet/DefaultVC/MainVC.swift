@@ -12,6 +12,7 @@ import Alamofire_Synchronous
 import SwiftyJSON
 import FBSDKShareKit
 import MessageUI
+import Kingfisher
 
 class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessageComposeViewControllerDelegate {
 
@@ -22,7 +23,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
     var periods: [String] = []
     var mem_counts: [String] = []
     var btn_names: [String] = []
-    var btn_images: [String] = []
+    var btn_image_urls: [String] = []
     var btn_tags: [String] = []
     
     let screenSize: CGRect = UIScreen.main.bounds
@@ -189,7 +190,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
                             let title = index.1["title"].string ?? ""
                             let period = index.1["period"].string ?? ""
                             let btn_name = index.1["btn_name"].string ?? ""
-                            let btn_image = index.1["btn_image"].string ?? ""
+                            let btn_image_url = index.1["btn_image_url"].string ?? ""
                             let btn_tag = index.1["btn_tag"].string ?? ""
                             
                             print(id)
@@ -199,7 +200,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
                             self.titles.append(title)
                             self.periods.append(period)
                             self.btn_names.append(btn_name)
-                            self.btn_images.append(btn_image)
+                            self.btn_image_urls.append(btn_image_url)
                             self.btn_tags.append(btn_tag)
                         }
                     }
@@ -268,11 +269,8 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
             itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: myCarousel.frame.size.width, height: myCarousel.frame.maxY - myTitle.frame.maxY - 20))
             itemView.contentMode = .scaleToFill
 
-            if(btn_images[index].isEmpty){
-                itemView.image = UIImage(named: "item_bg_diet")
-            } else {
-                itemView.image = UIImage(named: "\(btn_images[index])")
-            }
+            //kingfisher 사용 캐시기능
+            itemView.kf.setImage(with: URL(string: "\(btn_image_urls[index])"), placeholder: UIImage(named: "menu_image_1"), options: [.transition(ImageTransition.fade(0.5))])
 
             label1 = UILabel()
             label1.frame = CGRect(x: itemView.frame.minX, y: itemView.frame.maxY+10, width: itemView.frame.width, height: fontsize1+4)

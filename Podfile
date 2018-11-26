@@ -16,6 +16,7 @@ pod 'Validator'
 pod 'Validator'
 pod 'iCarousel'
 pod 'Alamofire-Synchronous'
+pod 'Kingfisher'
 
   # Pods for winnerdiet
 

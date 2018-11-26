@@ -70,6 +70,7 @@ PODS:
   - GoogleUtilities/UserDefaults (5.3.5):
     - GoogleUtilities/Logger
   - iCarousel (1.8.3)
+  - Kingfisher (4.10.1)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
@@ -88,6 +89,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Messaging
   - iCarousel
+  - Kingfisher
   - SwiftyJSON
   - Validator
 
@@ -108,6 +110,7 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleUtilities
     - iCarousel
+    - Kingfisher
     - nanopb
     - Protobuf
     - SwiftyJSON
@@ -129,11 +132,12 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
   GoogleUtilities: bb6ff5a302c97a0bc9820dad775505778c5a2676
   iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
+  Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   Validator: b34ab17a8fffd0c1ffd8f9002ead4d1e02cd9e6e
 
-PODFILE CHECKSUM: eb7a73234d108e495fbc9964cedb38113a68268a
+PODFILE CHECKSUM: 88d045571053c6f4872712d02d2a68aee3fa10e3
 
 COCOAPODS: 1.5.3
