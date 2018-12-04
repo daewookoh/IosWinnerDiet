@@ -25,6 +25,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
     var btn_names: [String] = []
     var btn_image_urls: [String] = []
     var btn_tags: [String] = []
+    var btn_tag_contents: [String] = []
     
     let screenSize: CGRect = UIScreen.main.bounds
     
@@ -61,6 +62,8 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
     }
     
     @IBAction func ktalkBtnClicked(_ sender: Any) {
+        
+        
         // Feed 타입 템플릿 오브젝트 생성
         let template = KMTFeedTemplate { (feedTemplateBuilder) in
             
@@ -72,7 +75,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
                 contentBuilder.imageWidth = 400
                 contentBuilder.imageHeight = 400
                 contentBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                    linkBuilder.mobileWebURL = URL(string: "http://www.winnerdiet.co.kr")
+                    linkBuilder.mobileWebURL = URL(string: self.common.share_url)
                 })
             })
             
@@ -133,11 +136,24 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
         myCarousel.dataSource = self
         myCarousel.delegate = self
         
+        //App Delegate 에서 DidBecomeActive감지
+        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadView(_:)), name: NSNotification.Name("ReloadView"), object: nil)
+        
         //print(self.view.frame.height)
         //myCarousel.frame.size.height = self.view.frame.height/2
         
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        getGameData()
+        UIView.transition(with: self.myCarousel, duration: 0.3, options: .transitionCrossDissolve, animations: { self.myCarousel.reloadData() }, completion: nil)
+    }
+    
+    @objc func reloadView(_ notification: Notification?) {
+        getGameData()
+        UIView.transition(with: self.myCarousel, duration: 0.3, options: .transitionCrossDissolve, animations: { self.myCarousel.reloadData() }, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -156,6 +172,15 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
     }
     
     public func getGameData(){
+        
+        items = []
+        titles = []
+        periods = []
+        mem_counts = []
+        btn_names = []
+        btn_image_urls = []
+        btn_tags = []
+        btn_tag_contents = []
         
         let parameters: Parameters = [
             "action": "getGameData"
@@ -192,6 +217,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
                             let btn_name = index.1["btn_name"].string ?? ""
                             let btn_image_url = index.1["btn_image_url"].string ?? ""
                             let btn_tag = index.1["btn_tag"].string ?? ""
+                            let btn_tag_content = index.1["btn_tag_content"].string ?? ""
                             
                             print(id)
                             print(title)
@@ -202,6 +228,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
                             self.btn_names.append(btn_name)
                             self.btn_image_urls.append(btn_image_url)
                             self.btn_tags.append(btn_tag)
+                            self.btn_tag_contents.append(btn_tag_content)
                         }
                     }
                 }
@@ -214,9 +241,6 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        
-        
         /*
         for i in 0 ... items.count {
             items.append(i)
@@ -224,7 +248,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
             periods.append("periods" + String(i))
         }
         */
-        getGameData()
+        //getGameData()
     }
     
     func numberOfItems(in carousel: iCarousel) -> Int {
@@ -302,6 +326,7 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
             if(!btn_tags[index].isEmpty)
             {
                 button1.tag = Int(btn_tags[index]) ?? 0
+                button1.accessibilityIdentifier = btn_tag_contents[index]
                 button1.addTarget(self, action:#selector(self.customBtnClicked(sender:)), for: .touchUpInside)
             }
             itemView.addSubview(button1)
@@ -328,27 +353,17 @@ class MainVC: UIViewController, iCarouselDelegate, iCarouselDataSource, MFMessag
     
     @objc public func customBtnClicked(sender: UIButton) {
         print(sender.tag)
+        
         switch sender.tag {
         
         case 1 :
-            moveToWebViewWithUrl(url:common.default_url + "/winner_diet.php")
-            
-        case 2 :
-            moveToWebViewWithUrl(url:common.default_url + "/winner_walking.php")
-            
-        case 3 :
-            moveToWebViewWithUrl(url:common.default_url + "/step.php")
-            
-        case 4 :
-            moveToWebViewWithUrl(url:common.default_url + "/webzine/list.php")
-            
-        case 5 :
-            moveToWebViewWithUrl(url:common.default_url + "/member/body_invitation.php")
+            moveToWebViewWithUrl(url:sender.accessibilityIdentifier ?? "")
 
         default:
             print("default")
             
         }
+        
     }
     
     func moveToWebViewWithUrl(url:String){

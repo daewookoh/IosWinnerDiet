@@ -37,12 +37,18 @@ class NavigationWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKS
     var webView: WKWebView!
     var createWebView: WKWebView!
 
-    
+
+    // View Lifecycle 시작
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        //webView.uiDelegate = self // js alert 사용을 위해 필요
-
+        
+        //App Delegate 에서 DidBecomeActive감지
+        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadWebView(_:)), name: NSNotification.Name("ReloadView"), object: nil)
+        
+        UserDefaults.standard.register(defaults: ["UserAgent": UIWebView().stringByEvaluatingJavaScript(from: "navigator.userAgent")! + common.user_agent])
+        
+        // ios 11이하 버젼에서는 스토리보드를 이용한 WKWebView를 사용할수 없으므로 아래와 같이 수동처리
         let contentController = WKUserContentController()
         contentController.add(self, name: common.js_name)
         
@@ -79,27 +85,53 @@ class NavigationWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKS
         }
     }
     
+    // 앱이 꺼지지 않은 상태에서 다시 뷰가 보일때 viewWillAppear부터 시작됨
     override func viewWillAppear(_ animated: Bool) {
         checkNetwork()
         
         let login_info = common.getUD("login_info") ?? ""
+        let perform_auto_login_yn = common.getUD("perform_auto_login_yn") ?? "N"
+        
+        if(!login_info.isEmpty && perform_auto_login_yn == "Y") {
+            common.setUD("perform_auto_login_yn","N")
+            loadPage(url: selUrl)
+            /*
+            if(selUrl.range(of: "login/logout.php") != nil)
+            {
+                selUrl = "/";
+            }
+ 
+            let login_url = common.api_url+"?action=autoLogin&s_url="+selUrl+"&login_info="+login_info
+            let url = URL(string: login_url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+            let request = URLRequest(url: url!)
+            webView.load(request)
+            */
+        }
+    }
+    // View Lifecycle 끝
+    
+    
+    func loadPage(url:String) {
+        let login_info = common.getUD("login_info") ?? ""
         
         if(login_info.isEmpty){
-            self.moveToLoginView()
-        }else if(webViewUrl.range(of: "login/login.php") != nil) {
-            self.moveToLoginView()
-        }else{
+            let final_url = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+            print(final_url)
+            let request = URLRequest(url: final_url!)
+            webView.load(request)
+        } else {
             if(selUrl.range(of: "login/logout.php") != nil)
             {
                 selUrl = "/";
             }
             let login_url = common.api_url+"?action=autoLogin&s_url="+selUrl+"&login_info="+login_info
+            print(login_url)
             let url = URL(string: login_url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
             let request = URLRequest(url: url!)
             webView.load(request)
         }
-        
     }
+    
     
     // 웹뷰 팝업처리
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
@@ -143,11 +175,7 @@ class NavigationWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKS
         super.didReceiveMemoryWarning()
     }
     
-    override func loadView() {
-        super.loadView()
-        
-        UserDefaults.standard.register(defaults: ["UserAgent": UIWebView().stringByEvaluatingJavaScript(from: "navigator.userAgent")! + common.user_agent])
-    }
+
     
     func checkNetwork(){
         if(CheckNetwork.isConnected()==false)
@@ -170,11 +198,26 @@ class NavigationWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKS
     func webView(_ webView: WKWebView,
                  didStartProvisionalNavigation navigation: WKNavigation){
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
+
     }
     
     func webView(_ webView: WKWebView,
                  didFinish navigation: WKNavigation){
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        
+        if ((webView.url?.absoluteString.range(of: "logout.php")) != nil)
+        {
+            common.setUD("login_info","")
+            moveToLoginView()
+            return
+        }
+        
+        if ((webView.url?.absoluteString.range(of: "login.php")) != nil)
+        {
+            common.setUD("login_info","")
+            moveToLoginView()
+            return
+        }
         
         refreshControl?.endRefreshing()
         
@@ -336,12 +379,7 @@ class NavigationWebVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKS
         webView.evaluateJavaScript("jsNativeToServer('" + enc_data + "')", completionHandler:nil)
         
     }
-    
-    func loadPage(url:String) {
-        let url = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-        let request = URLRequest(url: url!)
-        webView.load(request)
-    }
+
     
     func sendStepInfo(){
         

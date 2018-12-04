@@ -12,19 +12,19 @@ import UIKit
 class Common {
     
     let app_name:String = "WinnerDiet"
-    let default_url:String = "http://m.dreamteams.co.kr/"
-    let api_url:String = "http://m.dreamteams.co.kr/app/api.php"
-    let share_url:String = "http://www.winnerdiet.co.kr"
-    let sns_callback_url:String = "http://m.dreamteams.co.kr/sns/callback_from_app.php"
-    let user_agent:String = "dreamteams_app_ios"
-    let js_name:String = "DreamteamsApp"
+    let default_url:String = "https://www.winnerdiet.co.kr/"
+    let api_url:String = "https://www.winnerdiet.co.kr/app/api.php"
+    let share_url:String = "https://www.winnerdiet.co.kr"
+    let sns_callback_url:String = "https://www.winnerdiet.co.kr/sns/callback_from_app.php"
+    let user_agent:String = "winnerdiet_app_ios"
+    let js_name:String = "WinnerdietApp"
     
-    let naver_client_id:String = "Lk2Zb2Zrbg5OH5O_S7sK"
-    let naver_client_secret:String = "zash4KwwvV"
+    let naver_client_id:String = "odx6G1Dt3eo5YNNsQBH7"
+    let naver_client_secret:String = "aQqnBSDlM1"
     let naver_url_scheme:String = "winnerdiet"
     let naver_app_name:String = "네이버 아이디로 로그인"
     
-    let kakao_template_id = "10642"
+    let kakao_template_id = "13622"
     let apiHelper = APIHelper()
 
     
@@ -36,8 +36,8 @@ class Common {
     
     func getUD(_ name:String) -> String? {
         print("getUD : " + name)
-        return UserDefaults.standard.string(forKey: name)
         UserDefaults.standard.synchronize()
+        return UserDefaults.standard.string(forKey: name)
     }
     
     func setUDimage(_ name:String,_ data:Any) {

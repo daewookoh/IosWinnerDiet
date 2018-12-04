@@ -109,8 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //카카오 로그인
         KOSession.handleDidBecomeActive()
-        
-        NotificationCenter.default.post(name: NSNotification.Name("ReloadWebView"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("ReloadView"), object: nil)
     }
     // 카카오 로그인 끝
     

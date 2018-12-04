@@ -89,6 +89,7 @@ class LoginVC: UIViewController, XMLParserDelegate, NaverThirdPartyLoginConnecti
                     if(result_code == "0000"){
                         let login_info = json["login_info"].string ?? ""
                         self.common.setUD("login_info", login_info)
+                        self.common.setUD("perform_auto_login_yn", "Y")
                         self.dismiss(animated: true, completion: nil)
                     }
                     else{
@@ -230,6 +231,7 @@ class LoginVC: UIViewController, XMLParserDelegate, NaverThirdPartyLoginConnecti
                                             if(result_code == "0000"){
                                                 let login_info = json["login_info"].string ?? ""
                                                 self.common.setUD("login_info", login_info)
+                                                self.common.setUD("perform_auto_login_yn", "Y")
                                                 self.dismiss(animated: true, completion: nil)
                                             }
                                             else{

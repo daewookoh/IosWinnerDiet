@@ -14,7 +14,9 @@ import Social
 import FBSDKShareKit
 import HealthKit
 
-class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate {
+class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate {
+    
+    var picker = UIImagePickerController()
     
     var refreshControl:UIRefreshControl?
     var healthStore = HKHealthStore()
@@ -35,6 +37,68 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     var gender = ""
     var name = ""
     
+    // View Lifecycle 시작
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        
+        //App Delegate 에서 DidBecomeActive감지
+        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadWebView(_:)), name: NSNotification.Name("ReloadView"), object: nil)
+        
+        UserDefaults.standard.register(defaults: ["UserAgent": UIWebView().stringByEvaluatingJavaScript(from: "navigator.userAgent")! + common.user_agent])
+        
+        // ios 11이하 버젼에서는 스토리보드를 이용한 WKWebView를 사용할수 없으므로 아래와 같이 수동처리
+        let contentController = WKUserContentController()
+        contentController.add(self, name: common.js_name)
+        let config = WKWebViewConfiguration()
+        config.userContentController = contentController
+        
+        webView = WKWebView(frame: .zero, configuration: config)
+        webView.uiDelegate = self as WKUIDelegate
+        webView.navigationDelegate = self as WKNavigationDelegate
+
+        
+        var url = URL(string: common.default_url)
+        if(!sUrl.isEmpty){
+            url = URL(string: sUrl)
+        }
+        
+        let request = URLRequest(url: url!)
+        
+        webView.load(request)
+        
+        view = webView
+
+        setupRefreshControl()
+
+        // 카메라 촬영
+        picker.delegate = view as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
+        
+    }
+    
+    // 앱이 꺼지지 않은 상태에서 다시 뷰가 보일때 viewWillAppear부터 시작됨
+    override func viewWillAppear(_ animated: Bool) {
+        setNavController()
+        checkNetwork()
+    }
+    // View Lifecycle 종료
+    
+    
+    private func setupRefreshControl() {
+        let refreshControl = UIRefreshControl()
+        //refreshControl.backgroundColor = common.uicolorFromHex(0x8912f6)
+        //refreshControl.tintColor = UIColor.white
+        refreshControl.addTarget(self, action: #selector(refreshWebView(sender:)), for: UIControl.Event.valueChanged)
+        webView.scrollView.addSubview(refreshControl)
+    }
+    
+    @objc
+    private func refreshWebView(sender: UIRefreshControl) {
+        webView.reload()
+        sender.endRefreshing()
+    }
+    
+    
     // 웹뷰 팝업처리
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         
@@ -54,11 +118,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         view.addSubview(createWebView!)
         
         return createWebView!
-        
-        /* 현재 창에서 열고 싶은 경우
-         self.webView.load(navigationAction.request)
-         return nil
-         */
+
     }
     
     func webViewDidClose(_ webView: WKWebView) {
@@ -221,7 +281,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         if let cur_url = webView.url?.absoluteString{
-            if(cur_url == "http://m.dreamteams.co.kr/")
+            if(cur_url.hasSuffix("step.php"))
             {
                 sendStepInfo()
             }
@@ -237,58 +297,13 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.webView.uiDelegate = self
-        
-        //App Delegate 에서 DidBecomeActive감지
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadWebView(_:)), name: NSNotification.Name("ReloadWebView"), object: nil)
-        
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        /*
-        if(sUrl=="" && sUrl.isEmpty)
-        {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                
-                self.checkEvent()
-            }
-        }
-         */
-    }
+
     
     @objc func reloadWebView(_ notification: Notification?) {
         refreshControl?.beginRefreshing()
         webView.reload()
     }
-    
-    override func loadView() {
-        super.loadView()
-        
-        UserDefaults.standard.register(defaults: ["UserAgent": UIWebView().stringByEvaluatingJavaScript(from: "navigator.userAgent")! + common.user_agent])
-        
-        // ios 11이하 버젼에서는 스토리보드를 이용한 WKWebView를 사용할수 없으므로 아래와 같이 수동처리
-        let contentController = WKUserContentController()
-        contentController.add(self, name: common.js_name)
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
-        
-        webView = WKWebView(frame: .zero, configuration: config)
-        webView.uiDelegate = self as WKUIDelegate
-        webView.navigationDelegate = self as WKNavigationDelegate
-        
-        view = webView
-        
-        refreshControl = UIRefreshControl.init()
-        refreshControl!.addTarget(self, action:#selector(pullToRefresh), for: UIControl.Event.valueChanged)
-        webView.scrollView.addSubview(self.refreshControl!)
-        
-    }
-    
-    @objc func pullToRefresh(refresh:UIRefreshControl){
-        webView.reload()
-    }
-    
+
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -300,13 +315,13 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
                 
                 print(message)
                 
-                if message == "NAVERLOGIN" {
+                if message == "NAVER" {
                     print("NAVERLOGIN")
                     let naverConnection = NaverThirdPartyLoginConnection.getSharedInstance()
                     naverConnection?.delegate = self
                     naverConnection?.requestThirdPartyLogin()
                 }
-                else if message == "KAKAOLOGIN" {
+                else if message == "KAKAO" {
                     print("KAKAOLOGIN")
                     let session: KOSession = KOSession.shared();
                     if session.isOpen() {
@@ -325,7 +340,13 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
                                     print("id: \(String(describing: me.id))")
                                     
                                     self.name = (me.properties!["nickname"])!
-                                    self.email = (me.account?.email)!
+                                    if(me.account?.email == nil)
+                                    {
+                                        self.email = "null"
+                                    }else{
+                                        self.email = (me.account?.email)!
+                                        
+                                    }
                                     self.id = me.id!
                                     
                                     let url = self.common.sns_callback_url +
@@ -370,60 +391,11 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
                     }
                     else if(share_type == "KAKAO")
                     {
-                        // Feed 타입 템플릿 오브젝트 생성
-                        let template = KMTFeedTemplate { (feedTemplateBuilder) in
-                            
-                            // 컨텐츠
-                            feedTemplateBuilder.content = KMTContentObject(builderBlock: { (contentBuilder) in
-                                contentBuilder.title = title!
-                                contentBuilder.desc = content!
-                                contentBuilder.imageURL = URL(string: img_url!)!
-                                contentBuilder.imageWidth = 400
-                                contentBuilder.imageHeight = 400
-                                contentBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                                    linkBuilder.mobileWebURL = URL(string: link_url!)
-                                })
-                            })
-                            /*
-                            // 소셜
-                            feedTemplateBuilder.social = KMTSocialObject(builderBlock: { (socialBuilder) in
-                                socialBuilder.likeCount = 286
-                                socialBuilder.commnentCount = 45
-                                socialBuilder.sharedCount = 845
-                            })
-                            
-                            // 버튼
-                            feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
-                                buttonBuilder.title = "웹으로 보기"
-                                buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                                    linkBuilder.mobileWebURL = URL(string: "https://developers.kakao.com")
-                                })
-                            }))
-                            feedTemplateBuilder.addButton(KMTButtonObject(builderBlock: { (buttonBuilder) in
-                                buttonBuilder.title = "앱으로 보기"
-                                buttonBuilder.link = KMTLinkObject(builderBlock: { (linkBuilder) in
-                                    linkBuilder.iosExecutionParams = "param1=value1&param2=value2"
-                                    linkBuilder.androidExecutionParams = "param1=value1&param2=value2"
-                                })
-                            }))
-                            */
-                        }
+                        var stringDictionary: Dictionary = [String: String]()
+                        stringDictionary["${title}"] = title
+                        stringDictionary["${content}"] = content
                         
-                        // 카카오링크 실행
-                        KLKTalkLinkCenter.shared().sendDefault(with: template, success: { (warningMsg, argumentMsg) in
-                            
-                            // 성공
-                            print("warning message: \(String(describing: warningMsg))")
-                            print("argument message: \(String(describing: argumentMsg))")
-                            
-                        }, failure: { (error) in
-                            
-                            // 실패
-                            self.alert(title: "ERROR", msg:error.localizedDescription)
-                            print("error \(error)")
-                            
-                        })
- 
+                        KLKTalkLinkCenter.shared().sendCustom(withTemplateId: common.kakao_template_id, templateArgs: stringDictionary as! [String : String], success: nil, failure: nil)
                     }
                     else if(share_type == "KAKAOSTORY")
                     {
@@ -494,22 +466,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
             }
         }
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        setNavController()
-        checkNetwork()
-        //sendDeviceInfo()
-        
-        var url = URL(string: common.default_url)
-        if(!sUrl.isEmpty){
-            url = URL(string: sUrl)
-        }
-        
-        let request = URLRequest(url: url!)
-        
-        webView.load(request)
-    }
-    
+
     func loadPage(url:String) {
         let url = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
         let request = URLRequest(url: url!)
