@@ -19,6 +19,11 @@ class Common {
     let user_agent:String = "winnerdiet_app_ios"
     let js_name:String = "WinnerdietApp"
     
+    let admob_id:String = "ca-app-pub-6876766734666182~4507002325"
+    let admob_id_test:String = "ca-app-pub-3940256099942544~1458002511"
+    let admob_front_ad:String = "ca-app-pub-6876766734666182/3932287256"
+    let admob_front_ad_test:String = "ca-app-pub-3940256099942544/4411468910"
+    
     let naver_client_id:String = "odx6G1Dt3eo5YNNsQBH7"
     let naver_client_secret:String = "aQqnBSDlM1"
     let naver_url_scheme:String = "winnerdiet"

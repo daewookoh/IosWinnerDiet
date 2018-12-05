@@ -13,9 +13,11 @@ import MessageUI
 import Social
 import FBSDKShareKit
 import HealthKit
+import GoogleMobileAds
 
-class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate {
+class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate {
     
+    var frontAd: GADInterstitial!
     var picker = UIImagePickerController()
     
     var refreshControl:UIRefreshControl?
@@ -40,7 +42,6 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     // View Lifecycle 시작
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
         //App Delegate 에서 DidBecomeActive감지
         NotificationCenter.default.addObserver(self, selector: #selector(self.reloadWebView(_:)), name: NSNotification.Name("ReloadView"), object: nil)
@@ -285,6 +286,14 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
             {
                 sendStepInfo()
             }
+            else if(cur_url.hasSuffix("challenge.php"))
+            {
+                frontAd = GADInterstitial(adUnitID: common.admob_front_ad_test)
+                frontAd.delegate = self
+                let request = GADRequest()
+                //request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14" ]
+                frontAd.load(request)
+            }
         }
         
         refreshControl?.endRefreshing()
@@ -315,7 +324,12 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
                 
                 print(message)
                 
-                if message == "NAVER" {
+                if message == "FRONT_AD" {
+                    if frontAd.isReady {
+                        frontAd.present(fromRootViewController: self)
+                    }
+                }
+                else if message == "NAVER" {
                     print("NAVERLOGIN")
                     let naverConnection = NaverThirdPartyLoginConnection.getSharedInstance()
                     naverConnection?.delegate = self
@@ -691,4 +705,42 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
+    // 애드몹(전면 광고)
+    /// Tells the delegate an ad request succeeded.
+    func interstitialDidReceiveAd(_ ad: GADInterstitial) {
+        print("interstitialDidReceiveAd")
+        //frontAdBtn.isHidden=false
+    }
+    
+    /// Tells the delegate an ad request failed.
+    func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
+        print("interstitial:didFailToReceiveAdWithError: \(error.localizedDescription)")
+    }
+    
+    /// Tells the delegate that an interstitial will be presented.
+    func interstitialWillPresentScreen(_ ad: GADInterstitial) {
+        print("interstitialWillPresentScreen")
+    }
+    
+    /// Tells the delegate the interstitial is to be animated off the screen.
+    func interstitialWillDismissScreen(_ ad: GADInterstitial) {
+        print("interstitialWillDismissScreen")
+    }
+    
+    /// Tells the delegate the interstitial had been animated off the screen.
+    func interstitialDidDismissScreen(_ ad: GADInterstitial) {
+        print("interstitialDidDismissScreen")
+        //common.setUD("front_ad_success_yn","Y")
+        //frontAdBtn.isHidden=true
+        //webView.reload()
+    }
+    
+    /// Tells the delegate that a user click will open another app
+    /// (such as the App Store), backgrounding the current app.
+    func interstitialWillLeaveApplication(_ ad: GADInterstitial) {
+        print("interstitialWillLeaveApplication")
+    }
+    // 애드몹(전면 광고 끝)
+    
 }

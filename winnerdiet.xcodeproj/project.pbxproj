@@ -12,6 +12,7 @@
 		4C03DD5821AB889B0093C444 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C03DD5721AB889B0093C444 /* Kingfisher.framework */; };
 		4C0FE09121A6712500326118 /* NavigationWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0FE09021A6712500326118 /* NavigationWebVC.swift */; };
 		4C2C9FE021A4DE980019723D /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2C9FDF21A4DE980019723D /* MainVC.swift */; };
+		4C3CB13021B79B6900C5EF18 /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3CB12F21B79B6900C5EF18 /* GoogleMobileAds.framework */; };
 		4C82A36C2199031900C87602 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A36A2199031900C87602 /* SWRevealViewController.m */; };
 		4C82A370219909F800C87602 /* SWRearTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A36F219909F700C87602 /* SWRearTableVC.swift */; };
 		4C82A372219917DC00C87602 /* SWFrontWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C82A371219917DC00C87602 /* SWFrontWebVC.swift */; };
@@ -74,6 +75,7 @@
 		4C0FE09021A6712500326118 /* NavigationWebVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationWebVC.swift; sourceTree = "<group>"; };
 		4C2C9FDF21A4DE980019723D /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		4C2C9FE421A4FF5F0019723D /* iCarousel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iCarousel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C3CB12F21B79B6900C5EF18 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		4C82A36A2199031900C87602 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		4C82A36B2199031900C87602 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		4C82A36F219909F700C87602 /* SWRearTableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWRearTableVC.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				4CA922E2219CFFA100F3FB38 /* SwiftyJSON.framework in Frameworks */,
 				4CE4A3BD2193D997008E0919 /* KakaoCommon.framework in Frameworks */,
 				4CE4A3CA2193D9B6008E0919 /* libNaverLogin.a in Frameworks */,
+				4C3CB13021B79B6900C5EF18 /* GoogleMobileAds.framework in Frameworks */,
 				4CE4A3BE2193D997008E0919 /* KakaoMessageTemplate.framework in Frameworks */,
 				4CE4A3BF2193D997008E0919 /* KakaoLink.framework in Frameworks */,
 				4CE4A3C02193D997008E0919 /* KakaoOpenSDK.framework in Frameworks */,
@@ -284,6 +287,7 @@
 		FD3F8A4B59D30C4CE8F8952D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C3CB12F21B79B6900C5EF18 /* GoogleMobileAds.framework */,
 				4C03DD5721AB889B0093C444 /* Kingfisher.framework */,
 				4CF27D0B21A507D700FE98C0 /* iCarousel.h */,
 				4CF27D0C21A507D700FE98C0 /* iCarousel.m */,
