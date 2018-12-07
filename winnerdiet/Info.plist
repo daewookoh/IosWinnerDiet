@@ -34,41 +34,9 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>winnerdiet</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLIconFile</key>
-			<string>AppIcon</string>
-			<key>CFBundleURLName</key>
-			<string>comm.ios.winnerdiet</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>kakaodf0fb0a29530ede0aba29a9414deb5af</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLIconFile</key>
-			<string>AppIcon</string>
-			<key>CFBundleURLName</key>
-			<string>comm.ios.winnerdiet</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>fb601263656973915</string>
 			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLIconFile</key>
-			<string></string>
-			<key>CFBundleURLName</key>
-			<string></string>
-			<key>CFBundleURLSchemes</key>
-			<array/>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>

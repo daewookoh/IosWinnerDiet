@@ -13,6 +13,7 @@ class Common {
     
     let app_name:String = "WinnerDiet"
     let default_url:String = "https://www.winnerdiet.co.kr/"
+    //let default_url:String = "https://www.winnerdiet.co.kr/pay/pay.php?game_no=10006"
     let api_url:String = "https://www.winnerdiet.co.kr/app/api.php"
     let share_url:String = "https://www.winnerdiet.co.kr"
     let sns_callback_url:String = "https://www.winnerdiet.co.kr/sns/callback_from_app.php"
@@ -28,6 +29,9 @@ class Common {
     let naver_client_secret:String = "aQqnBSDlM1"
     let naver_url_scheme:String = "winnerdiet"
     let naver_app_name:String = "네이버 아이디로 로그인"
+    
+    let bootpay_id = "5c08b131b6d49c263112c6f2"
+    let bootpay_js_name:String = "Bootpay_iOS"
     
     let kakao_template_id = "13622"
     let apiHelper = APIHelper()

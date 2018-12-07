@@ -111,7 +111,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //카카오 로그인
         KOSession.handleDidBecomeActive()
-        NotificationCenter.default.post(name: NSNotification.Name("ReloadView"), object: nil)
+        
+        //Avtive 상태가 되었을때 reload 기능
+        //BOOTPAY 결제시 복잡해져서 사용안함
+        //NotificationCenter.default.post(name: NSNotification.Name("ReloadView"), object: nil)
     }
     // 카카오 로그인 끝
     
