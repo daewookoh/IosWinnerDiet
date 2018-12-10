@@ -26,7 +26,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     var picker = UIImagePickerController()
     
     // 리프레시
-    var refreshControl:UIRefreshControl?
+    var refreshControl = UIRefreshControl()
     
     // 만보기
     var healthStore = HKHealthStore()
@@ -94,7 +94,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     @objc func reloadWebView(_ notification: Notification?) {
         print("reloadWebView")
         
-        refreshControl?.beginRefreshing()
+        refreshControl.beginRefreshing()
         webView.reload()
 
     }
@@ -156,7 +156,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     }
     
     private func setupRefreshControl() {
-        let refreshControl = UIRefreshControl()
+        //let refreshControl = UIRefreshControl()
         //refreshControl.backgroundColor = common.uicolorFromHex(0x8912f6)
         //refreshControl.tintColor = UIColor.white
         refreshControl.addTarget(self, action: #selector(refreshWebView(sender:)), for: UIControl.Event.valueChanged)
@@ -383,6 +383,35 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
 //BOOTPAY 시작
 extension MainWebVC  {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        refreshControl.endRefreshing()
+        
+        if let cur_url = webView.url?.absoluteString{
+            if(cur_url.hasSuffix("step.php"))
+            {
+                sendStepInfo()
+            }
+            else if(cur_url.hasSuffix("challenge.php"))
+            {
+                frontAd = GADInterstitial(adUnitID: common.admob_front_ad)
+                frontAd.delegate = self
+                let request = GADRequest()
+                request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14" ]
+                frontAd.load(request)
+            }
+            else if(cur_url.hasSuffix("index2.php"))
+            {   
+                frontAd = GADInterstitial(adUnitID: common.admob_front_ad)
+                frontAd.delegate = self
+                let request = GADRequest()
+                request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14" ]
+                frontAd.load(request)
+            }
+        }
+        
+        
+        sendDeviceInfo()
+        
         registerAppId()
         setDevice()
         startTrace()
