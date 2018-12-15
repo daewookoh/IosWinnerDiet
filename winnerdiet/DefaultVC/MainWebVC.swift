@@ -50,6 +50,14 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         print("viewWillAppear")
         setNavController()
         checkNetwork()
+        
+        let urlFromPush = common.getUD("urlFromPush") ?? ""
+        
+        if(!urlFromPush.isEmpty)
+        {
+            common.setUD("urlFromPush","")
+            loadPage(url: urlFromPush)
+        }
     }
     
     func setWebView() {
@@ -120,7 +128,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         transition.duration = 0.4
         transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         transition.type = CATransitionType.fade
-        self.navigationController!.view.layer.add(transition, forKey: nil)
+        //self.navigationController!.view.layer.add(transition, forKey: nil)
     }
     
     func sendDeviceInfo(){
@@ -137,10 +145,21 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
                 as? String
         }
         
+        
         if (device_id == nil) {device_id=""}
         if (device_token == nil) {device_token=""}
         if (device_model == nil) {device_model=""}
         if (app_version == nil) {app_version=""}
+        
+        
+        let new_app_version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")
+            as! String
+        let old_app_version = app_version ?? ""
+        
+        if(new_app_version != old_app_version)
+        {
+            app_version=new_app_version
+        }
         
         common.setUD("device_id", device_id!)
         common.setUD("device_token", device_token!)
@@ -387,6 +406,7 @@ extension MainWebVC  {
         refreshControl.endRefreshing()
         
         if let cur_url = webView.url?.absoluteString{
+            /*
             if(cur_url.hasSuffix("step.php"))
             {
                 sendStepInfo()
@@ -407,6 +427,7 @@ extension MainWebVC  {
                 request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14" ]
                 frontAd.load(request)
             }
+            */
         }
         
         
@@ -520,7 +541,17 @@ extension MainWebVC  {
                 
                 print(message)
                 
-                if message == "FRONT_AD" {
+                if message == "STEP_DATA" {
+                    sendStepInfo()
+                }
+                else if message == "LOAD_FRONT_AD" {
+                    frontAd = GADInterstitial(adUnitID: common.admob_front_ad)
+                    frontAd.delegate = self
+                    let request = GADRequest()
+                    request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14" ]
+                    frontAd.load(request)
+                }
+                else if message == "SHOW_FRONT_AD" {
                     if frontAd.isReady {
                         frontAd.present(fromRootViewController: self)
                     }

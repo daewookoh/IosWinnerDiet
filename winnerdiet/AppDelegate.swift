@@ -10,6 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
     let common = Common()
+    var mainWebVC: MainWebVC?
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -189,6 +190,13 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         // Change this to your preferred presentation option
         completionHandler([.alert, .badge, .sound])
+        
+        if((userInfo["link"]) != nil)
+        {
+            let sUrl = userInfo["link"] as! String
+            common.setUD("urlFromPush", sUrl)
+            self.showMainViewController()
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -204,6 +212,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         print(userInfo)
         
         completionHandler()
+        
+
     }
 }
 // [END ios_10_message_handling]
@@ -225,4 +235,19 @@ extension AppDelegate : MessagingDelegate {
         print("Received data message: \(remoteMessage.appData)")
     }
     // [END ios_10_data_message]
+}
+
+extension AppDelegate {
+    
+    func showMainViewController() {
+        if self.mainWebVC == nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            self.mainWebVC = (storyboard.instantiateViewController(withIdentifier: "MainWebVC") as! MainWebVC)
+        }
+        
+        self.window?.rootViewController = self.mainWebVC
+        self.window?.makeKeyAndVisible()
+        
+        
+    }
 }
