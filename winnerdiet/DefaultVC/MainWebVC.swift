@@ -798,6 +798,21 @@ extension MainWebVC {
          }
      }
     
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+        
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
+        
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action) in
+            completionHandler(true)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+            completionHandler(false)
+        }))
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     func webViewDidClose(_ webView: WKWebView) {
         if webView == createWebView {
             createWebView?.removeFromSuperview()
