@@ -228,23 +228,115 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
             })
         }
         
-        self.getSteps()
-        
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: self.stepData, options: .prettyPrinted)
-            let jsonString = String(data: jsonData, encoding: String.Encoding.utf8)
-            let data = "act=setStepInfo&step_data=" + jsonString!
-            let enc_data = Data(data.utf8).base64EncodedString()
-            print("step_data : jsNativeToServer(enc_data)")
-            webView.evaluateJavaScript("jsNativeToServer('" + enc_data + "')", completionHandler:nil)
-        } catch {
-            print(error.localizedDescription)
+        self.stepData = [:]
+        for days in 0...14
+        {
+            self.getSteps(days:days)
         }
         
+        //구글에서 데이터를 받아오는 시간을 기다린다
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            do {
+                print(self.stepData)
+                let jsonData = try JSONSerialization.data(withJSONObject: self.stepData, options: .prettyPrinted)
+                let jsonString = String(data: jsonData, encoding: String.Encoding.utf8)
+                let data = "act=setStepInfo&step_data=" + jsonString!
+                let enc_data = Data(data.utf8).base64EncodedString()
+                print("step_data : jsNativeToServer(enc_data)")
+                self.webView.evaluateJavaScript("jsNativeToServer('" + enc_data + "')", completionHandler:nil)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
-    func getSteps() {
+    func getSteps(days:Int) {
         
+        let stepsQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        
+        let today = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
+        let endDate = today.addingTimeInterval(TimeInterval(-days*24*60*60))
+        let startDate = Calendar.current.startOfDay(for: endDate)
+        
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        
+        //총합을 구하는 쿼리
+        let query = HKStatisticsQuery(quantityType: stepsQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { (_, result, error) in
+   
+            var resultCount = 0.0
+            
+            guard let result = result else {
+                print("Failed to fetch steps rate")
+                return
+            }
+ 
+            if let sum = result.sumQuantity() {
+                
+                resultCount = sum.doubleValue(for: HKUnit.count())
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                let dateString = dateFormatter.string(from: endDate)
+                
+                if (self.stepData[dateString]==nil){
+                    self.stepData.updateValue(Int(resultCount), forKey: dateString)
+                }else{
+                    let new_count = self.stepData[dateString]! + Int(resultCount)
+                    self.stepData.updateValue(new_count, forKey: dateString)
+                }
+                
+                print(dateString)
+                print(resultCount)
+            }
+            
+        }
+        
+        //건강앱에서 강제로 넣은값은 가져오는 쿼리
+        let minus_query = HKStatisticsQuery(quantityType: stepsQuantityType, quantitySamplePredicate: predicate, options: .separateBySource) { (_, result, error) in
+            
+            var resultCount = 0.0
+            
+            guard let result = result else {
+                print("Failed to fetch steps rate")
+                return
+            }
+            
+            
+            for source in result.sources!
+            {
+                if(source.name=="건강" || source.name=="Health")
+                {
+                    if let sum = result.sumQuantity(for: source) {
+ 
+                        resultCount = sum.doubleValue(for: HKUnit.count())
+                        
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd"
+                        let dateString = dateFormatter.string(from: endDate)
+                        
+                        if (self.stepData[dateString]==nil){
+                            self.stepData.updateValue(-Int(resultCount), forKey: dateString)
+                        }else{
+                            let new_count = self.stepData[dateString]! - Int(resultCount)
+                            self.stepData.updateValue(new_count, forKey: dateString)
+                        }
+                        
+                        print(dateString)
+                        print("-\(resultCount)")
+                    }
+                    
+                    return
+                }
+            }
+        }
+        
+        //총합을 구한다
+        healthStore.execute(query)
+        //건강앱에서 강제로 넣은값은 뺀다
+        healthStore.execute(minus_query)
+ 
+        /*
+        // 이쿼리는 디바이스 별 걸음 값을 모두 합하는 쿼리로 사용하지 않는다(중복카운팅발생)
         let stepsCount = HKQuantityType.quantityType(
             forIdentifier: HKQuantityTypeIdentifier.stepCount)
         
@@ -264,25 +356,29 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
                 self.stepData = [:]
                 for steps in results as [HKQuantitySample]
                 {
-                    let step_date = steps.startDate
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd"
-                    let dateString = dateFormatter.string(from: step_date)
-                    
-                    let step_count = steps.quantity.doubleValue(for: HKUnit.count())
-                    
-                    if (self.stepData[dateString]==nil){
-                        self.stepData.updateValue(Int(step_count), forKey: dateString)
-                    }else{
-                        let new_count = Int(step_count) + self.stepData[dateString]!
-                        self.stepData.updateValue(new_count, forKey: dateString)
+                    //아이폰 기기의 데이터만 가져오기
+                    if(steps.device?.model=="iPhone")
+                    {
+                       let step_date = steps.startDate
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd"
+                        let dateString = dateFormatter.string(from: step_date)
+                        
+                        let step_count = steps.quantity.doubleValue(for: HKUnit.count())
+                        
+                        if (self.stepData[dateString]==nil){
+                            self.stepData.updateValue(Int(step_count), forKey: dateString)
+                        }else{
+                            let new_count = Int(step_count) + self.stepData[dateString]!
+                            self.stepData.updateValue(new_count, forKey: dateString)
+                        }
+                        
+                        myString = dateString
+                        print(step_date)
+                        print(dateString)
+                        print(Int(step_count))
+                        //print(steps)
                     }
-                    
-                    myString = dateString
-                    print(step_date)
-                    print(dateString)
-                    print(Int(step_count))
-                    //print(steps)
                 }
                 
                 if !myString.isEmpty {
@@ -296,6 +392,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         
         // Don't forget to execute the Query!
         healthStore.execute(stepsSampleQuery)
+        */
         
     }
     // 만보기 끝
