@@ -336,7 +336,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         healthStore.execute(minus_query)
  
         /*
-        // 이쿼리는 디바이스 별 걸음 값을 모두 합하는 쿼리로 사용하지 않는다(중복카운팅발생)
+        // 이쿼리는 디바이스 별 걸음 값을 모두 합하는 쿼리로 사용하지 않는다(중복카운팅발생)qjrmqasfdffffffffqqjsadfasdffffffffffffffff
         let stepsCount = HKQuantityType.quantityType(
             forIdentifier: HKQuantityTypeIdentifier.stepCount)
         
