@@ -1,6 +1,6 @@
 //
 //  MainVC.swift
-//  winnerdiet
+//  winnerlife
 //
 //  Created by godowondev on 2018. 11. 21..
 //  Copyright © 2018년 Dreamteams. All rights reserved.

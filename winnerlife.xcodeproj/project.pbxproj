@@ -88,12 +88,12 @@
 		4CDA472F219417F3000250F4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4CDA473321941A27000250F4 /* Images-3.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-3.xcassets"; sourceTree = "<group>"; };
 		4CE22603219CF45E007F3E76 /* JoinVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinVC.swift; sourceTree = "<group>"; };
-		4CE4A36B2193CEB9008E0919 /* winnerdiet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = winnerdiet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CE4A36B2193CEB9008E0919 /* winnerlife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = winnerlife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CE4A3782193CEBB008E0919 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		4CE4A37F2193CEBB008E0919 /* winnerdietTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = winnerdietTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CE4A37F2193CEBB008E0919 /* winnerlifeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = winnerlifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CE4A3832193CEBB008E0919 /* winnerdietTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = winnerdietTests.swift; sourceTree = "<group>"; };
 		4CE4A3852193CEBB008E0919 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4CE4A38A2193CEBB008E0919 /* winnerdietUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = winnerdietUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CE4A38A2193CEBB008E0919 /* winnerlifeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = winnerlifeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CE4A38E2193CEBB008E0919 /* winnerdietUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = winnerdietUITests.swift; sourceTree = "<group>"; };
 		4CE4A3902193CEBB008E0919 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4CE4A3A12193D72A008E0919 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 		4CE4A3A92193D72A008E0919 /* ErrorVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorVC.swift; sourceTree = "<group>"; };
 		4CE4A3AA2193D72A008E0919 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		4CE4A3AB2193D72A008E0919 /* APIHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIHelper.swift; sourceTree = "<group>"; };
-		4CE4A3B62193D8E0008E0919 /* winnerdiet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = winnerdiet.entitlements; sourceTree = "<group>"; };
+		4CE4A3B62193D8E0008E0919 /* winnerlife.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = winnerlife.entitlements; sourceTree = "<group>"; };
 		4CE4A3B72193D8E0008E0919 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		4CE4A3B92193D997008E0919 /* KakaoCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoCommon.framework; sourceTree = "<group>"; };
 		4CE4A3BA2193D997008E0919 /* KakaoMessageTemplate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoMessageTemplate.framework; sourceTree = "<group>"; };
@@ -197,7 +197,7 @@
 		4CE4A3622193CEB9008E0919 = {
 			isa = PBXGroup;
 			children = (
-				4CE4A36D2193CEB9008E0919 /* winnerdiet */,
+				4CE4A36D2193CEB9008E0919 /* winnerlife */,
 				4CE4A3822193CEBB008E0919 /* winnerdietTests */,
 				4CE4A38D2193CEBB008E0919 /* winnerdietUITests */,
 				4CE4A36C2193CEB9008E0919 /* Products */,
@@ -210,18 +210,18 @@
 		4CE4A36C2193CEB9008E0919 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4CE4A36B2193CEB9008E0919 /* winnerdiet.app */,
-				4CE4A37F2193CEBB008E0919 /* winnerdietTests.xctest */,
-				4CE4A38A2193CEBB008E0919 /* winnerdietUITests.xctest */,
+				4CE4A36B2193CEB9008E0919 /* winnerlife.app */,
+				4CE4A37F2193CEBB008E0919 /* winnerlifeTests.xctest */,
+				4CE4A38A2193CEBB008E0919 /* winnerlifeUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4CE4A36D2193CEB9008E0919 /* winnerdiet */ = {
+		4CE4A36D2193CEB9008E0919 /* winnerlife */ = {
 			isa = PBXGroup;
 			children = (
 				4CF27D1821A55D7600FE98C0 /* NanumBarunGothicBold.otf */,
-				4CE4A3B62193D8E0008E0919 /* winnerdiet.entitlements */,
+				4CE4A3B62193D8E0008E0919 /* winnerlife.entitlements */,
 				4C82A373219A565300C87602 /* DefaultVC */,
 				4C82A369219902C500C87602 /* SlideMenu */,
 				4CE4A3A22193D72A008E0919 /* AppDelegate.swift */,
@@ -236,7 +236,7 @@
 				4CE4A3A42193D72A008E0919 /* bridge.h */,
 				4CDA473321941A27000250F4 /* Images-3.xcassets */,
 			);
-			path = winnerdiet;
+			path = winnerlife;
 			sourceTree = "<group>";
 		};
 		4CE4A3822193CEBB008E0919 /* winnerdietTests */ = {
@@ -311,9 +311,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4CE4A36A2193CEB9008E0919 /* winnerdiet */ = {
+		4CE4A36A2193CEB9008E0919 /* winnerlife */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4CE4A3932193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerdiet" */;
+			buildConfigurationList = 4CE4A3932193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerlife" */;
 			buildPhases = (
 				38669B42BFF77EDD3B88A6EE /* [CP] Check Pods Manifest.lock */,
 				4CE4A3672193CEB9008E0919 /* Sources */,
@@ -325,14 +325,14 @@
 			);
 			dependencies = (
 			);
-			name = winnerdiet;
+			name = winnerlife;
 			productName = winnerdiet;
-			productReference = 4CE4A36B2193CEB9008E0919 /* winnerdiet.app */;
+			productReference = 4CE4A36B2193CEB9008E0919 /* winnerlife.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4CE4A37E2193CEBB008E0919 /* winnerdietTests */ = {
+		4CE4A37E2193CEBB008E0919 /* winnerlifeTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4CE4A3962193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerdietTests" */;
+			buildConfigurationList = 4CE4A3962193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerlifeTests" */;
 			buildPhases = (
 				94EB733486D92FCCE877553B /* [CP] Check Pods Manifest.lock */,
 				4CE4A37B2193CEBB008E0919 /* Sources */,
@@ -344,14 +344,14 @@
 			dependencies = (
 				4CE4A3812193CEBB008E0919 /* PBXTargetDependency */,
 			);
-			name = winnerdietTests;
+			name = winnerlifeTests;
 			productName = winnerdietTests;
-			productReference = 4CE4A37F2193CEBB008E0919 /* winnerdietTests.xctest */;
+			productReference = 4CE4A37F2193CEBB008E0919 /* winnerlifeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		4CE4A3892193CEBB008E0919 /* winnerdietUITests */ = {
+		4CE4A3892193CEBB008E0919 /* winnerlifeUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4CE4A3992193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerdietUITests" */;
+			buildConfigurationList = 4CE4A3992193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerlifeUITests" */;
 			buildPhases = (
 				E7E32C7C515DF4F4B634351C /* [CP] Check Pods Manifest.lock */,
 				4CE4A3862193CEBB008E0919 /* Sources */,
@@ -363,9 +363,9 @@
 			dependencies = (
 				4CE4A38C2193CEBB008E0919 /* PBXTargetDependency */,
 			);
-			name = winnerdietUITests;
+			name = winnerlifeUITests;
 			productName = winnerdietUITests;
-			productReference = 4CE4A38A2193CEBB008E0919 /* winnerdietUITests.xctest */;
+			productReference = 4CE4A38A2193CEBB008E0919 /* winnerlifeUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -400,7 +400,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4CE4A3662193CEB9008E0919 /* Build configuration list for PBXProject "winnerdiet" */;
+			buildConfigurationList = 4CE4A3662193CEB9008E0919 /* Build configuration list for PBXProject "winnerlife" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -413,9 +413,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4CE4A36A2193CEB9008E0919 /* winnerdiet */,
-				4CE4A37E2193CEBB008E0919 /* winnerdietTests */,
-				4CE4A3892193CEBB008E0919 /* winnerdietUITests */,
+				4CE4A36A2193CEB9008E0919 /* winnerlife */,
+				4CE4A37E2193CEBB008E0919 /* winnerlifeTests */,
+				4CE4A3892193CEBB008E0919 /* winnerlifeUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -596,12 +596,12 @@
 /* Begin PBXTargetDependency section */
 		4CE4A3812193CEBB008E0919 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4CE4A36A2193CEB9008E0919 /* winnerdiet */;
+			target = 4CE4A36A2193CEB9008E0919 /* winnerlife */;
 			targetProxy = 4CE4A3802193CEBB008E0919 /* PBXContainerItemProxy */;
 		};
 		4CE4A38C2193CEBB008E0919 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4CE4A36A2193CEB9008E0919 /* winnerdiet */;
+			target = 4CE4A36A2193CEB9008E0919 /* winnerlife */;
 			targetProxy = 4CE4A38B2193CEBB008E0919 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -741,14 +741,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-1";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = winnerdiet/winnerdiet.entitlements;
+				CODE_SIGN_ENTITLEMENTS = winnerlife/winnerlife.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3KG66MUG6F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				INFOPLIST_FILE = winnerdiet/Info.plist;
+				INFOPLIST_FILE = winnerlife/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -760,6 +761,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = comm.ios.winnerdiet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/bridge.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
@@ -774,14 +776,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-1";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = winnerdiet/winnerdiet.entitlements;
+				CODE_SIGN_ENTITLEMENTS = winnerlife/winnerlife.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3KG66MUG6F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				INFOPLIST_FILE = winnerdiet/Info.plist;
+				INFOPLIST_FILE = winnerlife/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -793,6 +796,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = comm.ios.winnerdiet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/bridge.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -817,7 +821,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/winnerdiet.app/winnerdiet";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/winnerlife.app/winnerlife";
 			};
 			name = Debug;
 		};
@@ -839,7 +843,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/winnerdiet.app/winnerdiet";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/winnerlife.app/winnerlife";
 			};
 			name = Release;
 		};
@@ -888,7 +892,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4CE4A3662193CEB9008E0919 /* Build configuration list for PBXProject "winnerdiet" */ = {
+		4CE4A3662193CEB9008E0919 /* Build configuration list for PBXProject "winnerlife" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4CE4A3912193CEBB008E0919 /* Debug */,
@@ -897,7 +901,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4CE4A3932193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerdiet" */ = {
+		4CE4A3932193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerlife" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4CE4A3942193CEBB008E0919 /* Debug */,
@@ -906,7 +910,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4CE4A3962193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerdietTests" */ = {
+		4CE4A3962193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerlifeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4CE4A3972193CEBB008E0919 /* Debug */,
@@ -915,7 +919,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4CE4A3992193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerdietUITests" */ = {
+		4CE4A3992193CEBB008E0919 /* Build configuration list for PBXNativeTarget "winnerlifeUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4CE4A39A2193CEBB008E0919 /* Debug */,

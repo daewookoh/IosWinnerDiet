@@ -1,5 +1,5 @@
-framework module Pods_winnerdiet {
-  umbrella header "Pods-winnerdiet-umbrella.h"
+framework module Pods_winnerlife {
+  umbrella header "Pods-winnerlife-umbrella.h"
 
   export *
   module * { export * }

@@ -1,15 +1,15 @@
 //
-//  winnerdietTests.swift
-//  winnerdietTests
+//  winnerlifeTests.swift
+//  winnerlifeTests
 //
 //  Created by godowondev on 2018. 11. 8..
 //  Copyright © 2018년 Dreamteams. All rights reserved.
 //
 
 import XCTest
-@testable import winnerdiet
+@testable import winnerlife
 
-class winnerdietTests: XCTestCase {
+class winnerlifeTests: XCTestCase {
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.

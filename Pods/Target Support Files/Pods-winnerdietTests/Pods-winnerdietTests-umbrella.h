@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_winnerdietTestsVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_winnerdietTestsVersionString[];
+FOUNDATION_EXPORT double Pods_winnerlifeTestsVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_winnerlifeTestsVersionString[];
 

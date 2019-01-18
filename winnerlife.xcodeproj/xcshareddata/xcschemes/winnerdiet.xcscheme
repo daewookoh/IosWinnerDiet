@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4CE4A36A2193CEB9008E0919"
-               BuildableName = "winnerdiet.app"
-               BlueprintName = "winnerdiet"
-               ReferencedContainer = "container:winnerdiet.xcodeproj">
+               BuildableName = "winnerlife.app"
+               BlueprintName = "winnerlife"
+               ReferencedContainer = "container:winnerlife.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4CE4A37E2193CEBB008E0919"
-               BuildableName = "winnerdietTests.xctest"
-               BlueprintName = "winnerdietTests"
-               ReferencedContainer = "container:winnerdiet.xcodeproj">
+               BuildableName = "winnerlifeTests.xctest"
+               BlueprintName = "winnerlifeTests"
+               ReferencedContainer = "container:winnerlife.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4CE4A3892193CEBB008E0919"
-               BuildableName = "winnerdietUITests.xctest"
-               BlueprintName = "winnerdietUITests"
-               ReferencedContainer = "container:winnerdiet.xcodeproj">
+               BuildableName = "winnerlifeUITests.xctest"
+               BlueprintName = "winnerlifeUITests"
+               ReferencedContainer = "container:winnerlife.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,9 +53,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4CE4A36A2193CEB9008E0919"
-            BuildableName = "winnerdiet.app"
-            BlueprintName = "winnerdiet"
-            ReferencedContainer = "container:winnerdiet.xcodeproj">
+            BuildableName = "winnerlife.app"
+            BlueprintName = "winnerlife"
+            ReferencedContainer = "container:winnerlife.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4CE4A36A2193CEB9008E0919"
-            BuildableName = "winnerdiet.app"
-            BlueprintName = "winnerdiet"
-            ReferencedContainer = "container:winnerdiet.xcodeproj">
+            BuildableName = "winnerlife.app"
+            BlueprintName = "winnerlife"
+            ReferencedContainer = "container:winnerlife.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4CE4A36A2193CEB9008E0919"
-            BuildableName = "winnerdiet.app"
-            BlueprintName = "winnerdiet"
-            ReferencedContainer = "container:winnerdiet.xcodeproj">
+            BuildableName = "winnerlife.app"
+            BlueprintName = "winnerlife"
+            ReferencedContainer = "container:winnerlife.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

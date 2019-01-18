@@ -1,7 +1,7 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
 
-target 'winnerdiet' do
+target 'winnerlife' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
@@ -18,14 +18,14 @@ pod 'iCarousel'
 pod 'Alamofire-Synchronous'
 pod 'Kingfisher'
 
-  # Pods for winnerdiet
+  # Pods for winnerlife
 
-  target 'winnerdietTests' do
+  target 'winnerlifeTests' do
     inherit! :search_paths
     # Pods for testing
   end
 
-  target 'winnerdietUITests' do
+  target 'winnerlifeUITests' do
     inherit! :search_paths
     # Pods for testing
   end

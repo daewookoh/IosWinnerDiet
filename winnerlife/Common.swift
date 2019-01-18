@@ -11,12 +11,12 @@ import UIKit
 
 class Common {
     
-    let app_name:String = "WinnerDiet"
-    let default_url:String = "https://www.winnerdiet.co.kr/"
-    //let default_url:String = "https://www.winnerdiet.co.kr/pay/pay.php?game_no=10006"
-    let api_url:String = "https://www.winnerdiet.co.kr/app/api.php"
-    let share_url:String = "https://www.winnerdiet.co.kr"
-    let sns_callback_url:String = "https://www.winnerdiet.co.kr/sns/callback_from_app.php"
+    let app_name:String = "WinnerLife"
+    let default_url:String = "https://www.winnerlife.co.kr/"
+    //let default_url:String = "https://www.winnerlife.co.kr/pay/pay.php?game_no=10006"
+    let api_url:String = "https://www.winnerlife.co.kr/app/api.php"
+    let share_url:String = "https://www.winnerlife.co.kr"
+    let sns_callback_url:String = "https://www.winnerlife.co.kr/sns/callback_from_app.php"
     let user_agent:String = "winnerdiet_app_ios"
     let js_name:String = "WinnerdietApp"
     
@@ -27,7 +27,7 @@ class Common {
     
     let naver_client_id:String = "odx6G1Dt3eo5YNNsQBH7"
     let naver_client_secret:String = "aQqnBSDlM1"
-    let naver_url_scheme:String = "winnerdiet"
+    let naver_url_scheme:String = "winnerlife"
     let naver_app_name:String = "네이버 아이디로 로그인"
     
     let bootpay_id = "5c08b131b6d49c263112c6f2"

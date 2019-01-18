@@ -18,7 +18,7 @@
         <!--SWRearTableVC-->
         <scene sceneID="lgb-yp-1ym">
             <objects>
-                <tableViewController storyboardIdentifier="SWRearTableVC" id="48Q-SA-Ikm" userLabel="SWRearTableVC" customClass="SWRearTableVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="SWRearTableVC" id="48Q-SA-Ikm" userLabel="SWRearTableVC" customClass="SWRearTableVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="oKg-Pk-0Am">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -49,12 +49,12 @@
         <!--SWFrontWebVC-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="SWFrontWebVC" id="BYZ-38-t0r" userLabel="SWFrontWebVC" customClass="SWFrontWebVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SWFrontWebVC" id="BYZ-38-t0r" userLabel="SWFrontWebVC" customClass="SWFrontWebVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Winner Diet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sDP-bt-YW6">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Winner Life" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sDP-bt-YW6">
                                 <rect key="frame" x="0.0" y="64" width="414" height="60"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -121,7 +121,7 @@
         <!--ErrorVC-->
         <scene sceneID="Mo2-jU-WxN">
             <objects>
-                <viewController storyboardIdentifier="ErrorVC" id="9ro-zw-rMd" userLabel="ErrorVC" customClass="ErrorVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ErrorVC" id="9ro-zw-rMd" userLabel="ErrorVC" customClass="ErrorVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8QF-PA-GkX">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -157,7 +157,7 @@
         <!--NavigationWebVC-->
         <scene sceneID="sOr-Yw-9My">
             <objects>
-                <viewController storyboardIdentifier="NavigationWebVC" id="HBI-tv-XN1" userLabel="NavigationWebVC" customClass="NavigationWebVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NavigationWebVC" id="HBI-tv-XN1" userLabel="NavigationWebVC" customClass="NavigationWebVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xl4-7M-WJe">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -188,7 +188,7 @@
         <!--LoginVC-->
         <scene sceneID="PVC-Qx-0v7">
             <objects>
-                <viewController storyboardIdentifier="LoginVC" title="LoginVC" id="Ou1-m7-Dgb" userLabel="LoginVC" customClass="LoginVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginVC" title="LoginVC" id="Ou1-m7-Dgb" userLabel="LoginVC" customClass="LoginVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jxf-j5-kQM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -297,7 +297,7 @@
         <!--JoinVC-->
         <scene sceneID="WzV-iU-dpz">
             <objects>
-                <viewController storyboardIdentifier="JoinVC" id="IFc-GL-mYM" userLabel="JoinVC" customClass="JoinVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="JoinVC" id="IFc-GL-mYM" userLabel="JoinVC" customClass="JoinVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9VP-HY-X4i">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -406,7 +406,7 @@
         <!--MainWebVC-->
         <scene sceneID="bYQ-dy-F8C">
             <objects>
-                <viewController storyboardIdentifier="MainWebVC" id="rig-dU-01G" userLabel="MainWebVC" customClass="MainWebVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainWebVC" id="rig-dU-01G" userLabel="MainWebVC" customClass="MainWebVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="f5b-bz-jrN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -422,7 +422,7 @@
         <!--MainVC-->
         <scene sceneID="m9A-kn-PZI">
             <objects>
-                <viewController storyboardIdentifier="MainVC" id="EI5-UW-DY5" userLabel="MainVC" customClass="MainVC" customModule="winnerdiet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainVC" id="EI5-UW-DY5" userLabel="MainVC" customClass="MainVC" customModule="winnerlife" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pCw-O0-KWO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

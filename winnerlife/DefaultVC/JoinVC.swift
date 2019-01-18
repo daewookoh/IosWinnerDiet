@@ -1,6 +1,6 @@
 //
 //  JoinVC.swift
-//  winnerdiet
+//  winnerlife
 //
 //  Created by godowondev on 2018. 11. 15..
 //  Copyright © 2018년 Dreamteams. All rights reserved.
