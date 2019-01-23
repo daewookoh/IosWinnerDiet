@@ -233,6 +233,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         {
             self.getSteps(days:days)
         }
+        self.dateDiffSteps()
         
         //구글에서 데이터를 받아오는 시간을 기다린다
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -334,65 +335,60 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         healthStore.execute(query)
         //건강앱에서 강제로 넣은값은 뺀다
         healthStore.execute(minus_query)
- 
-        /*
-        // 이쿼리는 디바이스 별 걸음 값을 모두 합하는 쿼리로 사용하지 않는다(중복카운팅발생)qjrmqasfdffffffffqqjsadfasdffffffffffffffff
+    }
+    
+    func dateDiffSteps() {
+            
+        //시작일과 종료일이 다른데이터의 경우 종료일의 걸음수에 더해준다
         let stepsCount = HKQuantityType.quantityType(
             forIdentifier: HKQuantityTypeIdentifier.stepCount)
         
         let sort = [
             NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
         ]
-        
-        
-        let stepsSampleQuery = HKSampleQuery(sampleType: stepsCount!,
+
+        let diffDateQuery = HKSampleQuery(sampleType: stepsCount!,
                                              predicate: nil,
-                                             limit: 1000,
+                                             limit: 500,
                                              sortDescriptors: sort)
         {   query, results, error in
             if let results = results as? [HKQuantitySample] {
                 
-                var myString: String = ""
-                self.stepData = [:]
                 for steps in results as [HKQuantitySample]
                 {
                     //아이폰 기기의 데이터만 가져오기
                     if(steps.device?.model=="iPhone")
                     {
-                       let step_date = steps.startDate
+                        let start_date = steps.startDate
+                        let end_date = steps.endDate
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "yyyy-MM-dd"
-                        let dateString = dateFormatter.string(from: step_date)
+                        let startDate = dateFormatter.string(from: start_date)
+                        let endDate = dateFormatter.string(from: end_date)
                         
-                        let step_count = steps.quantity.doubleValue(for: HKUnit.count())
-                        
-                        if (self.stepData[dateString]==nil){
-                            self.stepData.updateValue(Int(step_count), forKey: dateString)
-                        }else{
-                            let new_count = Int(step_count) + self.stepData[dateString]!
-                            self.stepData.updateValue(new_count, forKey: dateString)
+                        if(!(startDate==endDate))
+                        {
+                            let step_count = steps.quantity.doubleValue(for: HKUnit.count())
+                            
+                            print(startDate)
+                            print(endDate)
+                            print(Int(step_count))
+                            
+                            if (self.stepData[endDate]==nil){
+                                self.stepData.updateValue(Int(step_count), forKey: endDate)
+                            }else{
+                                let new_count = Int(step_count) + self.stepData[endDate]!
+                                self.stepData.updateValue(new_count, forKey: endDate)
+                            }
                         }
-                        
-                        myString = dateString
-                        print(step_date)
-                        print(dateString)
-                        print(Int(step_count))
-                        //print(steps)
                     }
                 }
-                
-                if !myString.isEmpty {
-                    self.stepData.removeValue(forKey: myString)
-                }
-                
-                print(self.stepData)
-                
+                //print(self.stepData)
             }
         }
-        
-        // Don't forget to execute the Query!
-        healthStore.execute(stepsSampleQuery)
-        */
+
+        //시작일과 종료일이 다른데이터의 경우 종료일의 걸음수에 더해준다
+        healthStore.execute(diffDateQuery)
         
     }
     // 만보기 끝
