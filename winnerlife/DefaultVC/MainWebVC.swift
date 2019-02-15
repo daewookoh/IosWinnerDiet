@@ -8,7 +8,7 @@ import HealthKit
 import GoogleMobileAds
 import CoreLocation
 
-class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, CLLocationManagerDelegate {
+class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, CLLocationManagerDelegate, GADRewardBasedVideoAdDelegate {
 
     // 기본
     var sUrl:String = ""
@@ -25,6 +25,9 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     
     // 전면광고
     var frontAd: GADInterstitial!
+    
+    // 리워드광고
+    var rewardAd: GADRewardBasedVideoAd!
     
     // 이미지 업로드
     var picker = UIImagePickerController()
@@ -667,18 +670,31 @@ extension MainWebVC  {
                 if message == "STEP_DATA" {
                     sendStepInfo()
                 }
+                else if message == "LOAD_REWARD_AD" {
+                    rewardAd = GADRewardBasedVideoAd.sharedInstance()
+                    rewardAd.delegate = self
+                    let request = GADRequest()
+                    request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14"]
+                    rewardAd.load(request,withAdUnitID: common.admob_reward_ad)
+                }
                 else if message == "LOAD_FRONT_AD" {
                     frontAd = GADInterstitial(adUnitID: common.admob_front_ad)
                     frontAd.delegate = self
                     let request = GADRequest()
-                    request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14" ]
+                    request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14"]
                     frontAd.load(request)
+                }
+                else if message == "SHOW_REWARD_AD" {
+                    if rewardAd.isReady {
+                        rewardAd.present(fromRootViewController: self)
+                    }
                 }
                 else if message == "SHOW_FRONT_AD" {
                     if frontAd.isReady {
                         frontAd.present(fromRootViewController: self)
                     }
                 }
+               
                 else if message == "NAVER" {
                     print("NAVERLOGIN")
                     let naverConnection = NaverThirdPartyLoginConnection.getSharedInstance()
@@ -872,6 +888,44 @@ extension MainWebVC  {
             completionHandler(.performDefaultHandling, nil)
         }
     }
+    
+    // 애드몹(리워드 광고)
+    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
+                            didRewardUserWith reward: GADAdReward) {
+        print("Reward received")
+        webView.evaluateJavaScript("rewardComplete()", completionHandler:nil)
+    }
+    
+    func rewardBasedVideoAdDidReceive(_ rewardBasedVideoAd:GADRewardBasedVideoAd) {
+        print("Reward based video ad is received.")
+        webView.evaluateJavaScript("rewardLoaded()", completionHandler:nil)
+    }
+    
+    func rewardBasedVideoAdDidOpen(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Opened reward based video ad.")
+    }
+    
+    func rewardBasedVideoAdDidStartPlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Reward based video ad started playing.")
+    }
+    
+    func rewardBasedVideoAdDidCompletePlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Reward based video ad has completed.")
+    }
+    
+    func rewardBasedVideoAdDidClose(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Reward based video ad is closed.")
+    }
+    
+    func rewardBasedVideoAdWillLeaveApplication(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        print("Reward based video ad will leave application.")
+    }
+    
+    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd,
+                            didFailToLoadWithError error: Error) {
+        print("Reward based video ad failed to load.")
+    }
+    // 애드몹(리워드 광고 끝)
 
 }
 

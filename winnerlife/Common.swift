@@ -24,6 +24,8 @@ class Common {
     let admob_id_test:String = "ca-app-pub-3940256099942544~1458002511"
     let admob_front_ad:String = "ca-app-pub-6876766734666182/3932287256"
     let admob_front_ad_test:String = "ca-app-pub-3940256099942544/4411468910"
+    let admob_reward_ad:String = "ca-app-pub-6876766734666182/9437680550"
+    let admob_reward_ad_test:String = "ca-app-pub-3940256099942544/1712485313"
     
     let naver_client_id:String = "odx6G1Dt3eo5YNNsQBH7"
     let naver_client_secret:String = "aQqnBSDlM1"
