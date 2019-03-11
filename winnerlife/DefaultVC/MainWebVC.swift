@@ -7,6 +7,7 @@ import FBSDKShareKit
 import HealthKit
 import GoogleMobileAds
 import CoreLocation
+import AVFoundation
 
 class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, CLLocationManagerDelegate, GADRewardBasedVideoAdDelegate {
 
@@ -14,6 +15,7 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     var sUrl:String = ""
     let common = Common()
     let apiHelper = APIHelper()
+    var audioPlayer: AVAudioPlayer!
     
     // ios 11이하 버젼에서는 스토리보드를 이용한 WKWebView를 사용할수 없으므로 아래와 같이 수동처리
     //@IBOutlet weak var webView: WKWebView!
@@ -87,6 +89,17 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
                 //print("latitude" + String(coor.latitude) + "/ longitude" + String(coor.longitude))
             }
         }
+    }
+    
+    func playAudioFile(sound:String) {
+        let soundURL = Bundle.main.url(forResource: sound, withExtension: "mp3")
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL!)
+        } catch  {
+            print(error)
+        }
+        
+        audioPlayer.play()
     }
     
     func setWebView() {
@@ -693,6 +706,9 @@ extension MainWebVC  {
                     if frontAd.isReady {
                         frontAd.present(fromRootViewController: self)
                     }
+                }
+                else if message == "TEST_RING" {
+                    playAudioFile(sound: "ring")
                 }
                
                 else if message == "NAVER" {

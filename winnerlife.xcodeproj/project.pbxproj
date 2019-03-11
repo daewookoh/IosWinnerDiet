@@ -20,6 +20,7 @@
 		4CA922DE219CFFA100F3FB38 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA922DD219CFFA100F3FB38 /* Alamofire.framework */; };
 		4CA922E2219CFFA100F3FB38 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA922E1219CFFA100F3FB38 /* SwiftyJSON.framework */; };
 		4CA922E4219D03F600F3FB38 /* Validator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA922E3219D03F600F3FB38 /* Validator.framework */; };
+		4CD10CA7223646AE00738F69 /* ring.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4CD10CA6223646AE00738F69 /* ring.mp3 */; };
 		4CDA4730219417F4000250F4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CDA472F219417F3000250F4 /* GoogleService-Info.plist */; };
 		4CDA473421941A27000250F4 /* Images-3.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CDA473321941A27000250F4 /* Images-3.xcassets */; };
 		4CE22604219CF45E007F3E76 /* JoinVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE22603219CF45E007F3E76 /* JoinVC.swift */; };
@@ -85,6 +86,7 @@
 		4CA922DF219CFFA100F3FB38 /* SRFormValidator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SRFormValidator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CA922E1219CFFA100F3FB38 /* SwiftyJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CA922E3219D03F600F3FB38 /* Validator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Validator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CD10CA6223646AE00738F69 /* ring.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ring.mp3; sourceTree = "<group>"; };
 		4CDA472F219417F3000250F4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4CDA473321941A27000250F4 /* Images-3.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-3.xcassets"; sourceTree = "<group>"; };
 		4CE22603219CF45E007F3E76 /* JoinVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinVC.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 		4C82A373219A565300C87602 /* DefaultVC */ = {
 			isa = PBXGroup;
 			children = (
+				4CD10CA6223646AE00738F69 /* ring.mp3 */,
 				4CE4A3A82193D72A008E0919 /* ViewControllerSample.swift */,
 				4CE4A3A62193D72A008E0919 /* MainWebVC.swift */,
 				4C0FE09021A6712500326118 /* NavigationWebVC.swift */,
@@ -431,6 +434,7 @@
 				4CDA473421941A27000250F4 /* Images-3.xcassets in Resources */,
 				4CE4A3C92193D9B6008E0919 /* NaverAuth.bundle in Resources */,
 				4CE4A3AC2193D72A008E0919 /* Main.storyboard in Resources */,
+				4CD10CA7223646AE00738F69 /* ring.mp3 in Resources */,
 				4CE4A3792193CEBB008E0919 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
