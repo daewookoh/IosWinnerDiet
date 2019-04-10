@@ -8,14 +8,19 @@ import HealthKit
 import GoogleMobileAds
 import CoreLocation
 import AVFoundation
+import CoreMotion
+import UnityAds
 
-class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, CLLocationManagerDelegate, GADRewardBasedVideoAdDelegate {
-
+class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, CLLocationManagerDelegate, GADRewardBasedVideoAdDelegate, UnityAdsDelegate {
+    
     // 기본
     var sUrl:String = ""
     let common = Common()
     let apiHelper = APIHelper()
     var audioPlayer: AVAudioPlayer!
+    
+    //실시간 만보기
+    let pedoMeter = CMPedometer()
     
     // ios 11이하 버젼에서는 스토리보드를 이용한 WKWebView를 사용할수 없으므로 아래와 같이 수동처리
     //@IBOutlet weak var webView: WKWebView!
@@ -25,10 +30,10 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     //GPS
     var locationManager:CLLocationManager!
     
-    // 전면광고
+    // Admob 전면광고
     var frontAd: GADInterstitial!
     
-    // 리워드광고
+    // Admob 리워드광고
     var rewardAd: GADRewardBasedVideoAd!
     
     // 이미지 업로드
@@ -53,6 +58,8 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         super.viewDidLoad()
         setGPS()
         setWebView()
+        
+        UnityAds.initialize(common.unity_id, delegate: self)
     }
     
     // 앱이 꺼지지 않은 상태에서 다시 뷰가 보일때 viewWillAppear부터 시작됨
@@ -283,6 +290,43 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         
         //구글에서 데이터를 받아오는 시간을 기다린다
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            do {
+                print(self.stepData)
+                let jsonData = try JSONSerialization.data(withJSONObject: self.stepData, options: .prettyPrinted)
+                let jsonString = String(data: jsonData, encoding: String.Encoding.utf8)
+                let data = "act=setStepInfo&step_data=" + jsonString!
+                let enc_data = Data(data.utf8).base64EncodedString()
+                print("step_data : jsNativeToServer(enc_data)")
+                self.webView.evaluateJavaScript("jsNativeToServer('" + enc_data + "')", completionHandler:nil)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func sendStepInfoToday(){
+        
+        if HKHealthStore.isHealthDataAvailable(){
+            //let writeDataTypes = dataTypesToWrite()
+            let readDataTypes = dataTypesToRead()
+            
+            //healthStore.requestAuthorization(toShare: writeDataTypes as? Set<HKSampleType>, read: readDataTypes as?
+            healthStore.requestAuthorization(toShare: nil, read: readDataTypes as?
+                Set<HKObjectType>, completion: { (success, error) in
+                    if(!success){
+                        print("error")
+                        
+                        return
+                    }
+            })
+        }
+        
+        self.stepData = [:]
+        self.getSteps(days:0)
+        self.dateDiffSteps()
+        
+        //구글에서 데이터를 받아오는 시간을 기다린다
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             do {
                 print(self.stepData)
                 let jsonData = try JSONSerialization.data(withJSONObject: self.stepData, options: .prettyPrinted)
@@ -682,6 +726,33 @@ extension MainWebVC  {
                 
                 if message == "STEP_DATA" {
                     sendStepInfo()
+                    
+                    let cal = Calendar.current
+                    let comps = cal.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
+                    
+                    let current = cal.date(from: comps)!
+                    
+                    if(CMPedometer.isStepCountingAvailable()){
+                        
+                        self.pedoMeter.startUpdates(from: current) { (data: CMPedometerData?, error) -> Void in
+                            DispatchQueue.main.async(execute: { () -> Void in
+                                if(error == nil){
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                                    let dateString = dateFormatter.string(from: Date())
+ 
+                                    print("\(dateString)")
+                                    print("\(data!.numberOfSteps)")
+                                    self.webView.evaluateJavaScript("increaseStepWithDate('\(data!.numberOfSteps)','\(dateString)')", completionHandler:nil)
+                                    //self.step.text = "\(data!.numberOfSteps)"
+                                }
+                            })
+                        }
+                    }
+                    
+                }
+                else if message == "STEP_DATA_TODAY" {
+                    sendStepInfoToday()
                 }
                 else if message == "LOAD_REWARD_AD" {
                     rewardAd = GADRewardBasedVideoAd.sharedInstance()
@@ -696,6 +767,23 @@ extension MainWebVC  {
                     let request = GADRequest()
                     request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14"]
                     frontAd.load(request)
+                }
+                else if message == "CHECK_UNITY_REWARD_LOADED" {
+                    if (UnityAds.isReady("rewardedVideo")) {
+                        webView.evaluateJavaScript("rewardLoaded()", completionHandler:nil)
+                    }
+                }
+                else if message == "SHOW_UNITY_REWARD_AD" {
+                    if (UnityAds.isReady("rewardedVideo")) {
+                        //a video is ready & placement is valid
+                        UnityAds.show(self, placementId: "rewardedVideo")
+                    }
+                }
+                else if message == "SHOW_UNITY_FRONT_AD" {
+                    if (UnityAds.isReady("Interstitial")) {
+                        //a video is ready & placement is valid
+                        UnityAds.show(self, placementId: "Interstitial")
+                    }
                 }
                 else if message == "SHOW_REWARD_AD" {
                     if rewardAd.isReady {
@@ -741,7 +829,6 @@ extension MainWebVC  {
                                         self.email = "null"
                                     }else{
                                         self.email = (me.account?.email)!
-                                        
                                     }
                                     self.id = me.id!
                                     
@@ -942,7 +1029,28 @@ extension MainWebVC  {
         print("Reward based video ad failed to load.")
     }
     // 애드몹(리워드 광고 끝)
-
+    
+    // UnityAds
+    func unityAdsReady(_ placementId: String) {
+        print("unityAdsReady" + placementId)
+    }
+    
+    func unityAdsDidError(_ error: UnityAdsError, withMessage message: String) {
+        print("unityAdsDidError" + message)
+    }
+    
+    func unityAdsDidStart(_ placementId: String) {
+        print("unityAdsDidStart" + placementId)
+    }
+    
+    func unityAdsDidFinish(_ placementId: String, with state: UnityAdsFinishState) {
+        print("unityAdsDidFinish" + placementId)
+        if(placementId=="rewardedVideo")
+        {
+            webView.evaluateJavaScript("rewardComplete()", completionHandler:nil)
+        }
+    }
+    //UnityAds 끝
 }
 
 // 웹뷰 alert 팝업처리

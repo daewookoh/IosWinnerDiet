@@ -27,6 +27,8 @@ class Common {
     let admob_reward_ad:String = "ca-app-pub-6876766734666182/9437680550"
     let admob_reward_ad_test:String = "ca-app-pub-3940256099942544/1712485313"
     
+    let unity_id = "3105064"
+    
     let naver_client_id:String = "odx6G1Dt3eo5YNNsQBH7"
     let naver_client_secret:String = "aQqnBSDlM1"
     let naver_url_scheme:String = "winnerlife"
