@@ -15,7 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        GADMobileAds.configure(withApplicationID: common.admob_id)
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        //GADMobileAds.configure(withApplicationID: common.admob_id)
         Thread.sleep(forTimeInterval: 1.2) // 런치스크린 로딩시간
         
         FirebaseApp.configure()

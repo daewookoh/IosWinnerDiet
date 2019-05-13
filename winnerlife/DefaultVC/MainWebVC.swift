@@ -77,6 +77,36 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         }
     }
     
+    func sendTimezone(){
+        
+        let myTimezone = common.getUD("timezone") ?? ""
+        //let myTimezone = "null"
+        let timezone = Calendar.current.timeZone.identifier
+        
+        if(!timezone.isEmpty)
+        {
+            if(myTimezone.isEmpty || myTimezone != timezone){
+                
+                common.setUD("timezone", timezone)
+                
+                let swiftLocale: Locale = Locale.current
+                let regionCode: String! = swiftLocale.regionCode ?? "null"
+
+                let country:String!
+                if(regionCode != "null"){
+                    country = Locale.current.localizedString(forRegionCode: regionCode) ?? "?"
+                }else{
+                    country = timezone
+                }
+
+                let data = "act=setTimezoneInfo&timezone="+timezone+"&country="+country
+                let enc_data = Data(data.utf8).base64EncodedString()
+                print("jsNativeToServer(enc_data)")
+                webView.evaluateJavaScript("jsNativeToServer('" + enc_data + "')", completionHandler:nil)
+            }
+        }
+    }
+    
     func setGPS() {
         locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -181,7 +211,6 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     }
     
     func sendDeviceInfo(){
-        
         
         var device_id = common.getUD("device_id")
         var device_token = common.getUD("device_token")
@@ -615,7 +644,6 @@ extension MainWebVC  {
         
         
         sendDeviceInfo()
-        
         registerAppId()
         setDevice()
         startTrace()
@@ -754,18 +782,25 @@ extension MainWebVC  {
                 else if message == "STEP_DATA_TODAY" {
                     sendStepInfoToday()
                 }
+                else if message == "CHECK_TIMEZONE" {
+                    sendTimezone()
+                }
+                else if message == "RESET_TIMEZONE" {
+                    common.setUD("timezone", "")
+                    sendTimezone()
+                }
                 else if message == "LOAD_REWARD_AD" {
                     rewardAd = GADRewardBasedVideoAd.sharedInstance()
                     rewardAd.delegate = self
                     let request = GADRequest()
-                    request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14"]
+                    request.testDevices = [kGADSimulatorID, "1e79208a6d420d80d4ccf3d500a11739"]
                     rewardAd.load(request,withAdUnitID: common.admob_reward_ad)
                 }
                 else if message == "LOAD_FRONT_AD" {
                     frontAd = GADInterstitial(adUnitID: common.admob_front_ad)
                     frontAd.delegate = self
                     let request = GADRequest()
-                    request.testDevices = [kGADSimulatorID, "f4debf541bf25e9a44ac6794249bde14"]
+                    request.testDevices = [kGADSimulatorID, "1e79208a6d420d80d4ccf3d500a11739"]
                     frontAd.load(request)
                 }
                 else if message == "CHECK_UNITY_REWARD_LOADED" {
@@ -1029,6 +1064,35 @@ extension MainWebVC  {
         print("Reward based video ad failed to load.")
     }
     // 애드몹(리워드 광고 끝)
+    
+    // 애드몹(전면 광고)
+    func interstitialDidReceiveAd(_ ad: GADInterstitial) {
+        print("interstitialDidReceiveAd")
+        if frontAd.isReady {
+            frontAd.present(fromRootViewController: self)
+        }
+    }
+    
+    func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
+        print("interstitial:didFailToReceiveAdWithError: \(error.localizedDescription)")
+    }
+    
+    func interstitialWillPresentScreen(_ ad: GADInterstitial) {
+        print("interstitialWillPresentScreen")
+    }
+    
+    func interstitialWillDismissScreen(_ ad: GADInterstitial) {
+        print("interstitialWillDismissScreen")
+    }
+    
+    func interstitialDidDismissScreen(_ ad: GADInterstitial) {
+        print("interstitialDidDismissScreen")
+    }
+    
+    func interstitialWillLeaveApplication(_ ad: GADInterstitial) {
+        print("interstitialWillLeaveApplication")
+    }
+    // 애드몹(전면 광고 끝)
     
     // UnityAds
     func unityAdsReady(_ placementId: String) {

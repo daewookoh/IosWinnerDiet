@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.0</string>
+	<string>3.1</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -41,13 +41,15 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>19</string>
+	<string>20</string>
 	<key>FacebookAppID</key>
 	<string>601263656973915</string>
 	<key>FacebookDisplayName</key>
 	<string>WinnerLife</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6876766734666182~4507002325</string>
 	<key>KAKAO_APP_KEY</key>
 	<string>df0fb0a29530ede0aba29a9414deb5af</string>
 	<key>LSApplicationCategoryType</key>
@@ -108,6 +110,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>사진촬영을 사용합니다</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>건강앱의 걸음수를 가져옵니다</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>건강앱의 걸음수를 업데이트합니다</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -116,8 +120,6 @@
 	<string>움직임을 감지해 걸음수를 측정합니다</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>앨범의 사진을 사용합니다</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>건강앱의 걸음수를 가져옵니다</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
