@@ -29,6 +29,8 @@ class Common {
     
     let unity_id = "3105064"
     
+    let adlib_id = "5d0727d584ae40622e04df65"
+    
     let naver_client_id:String = "odx6G1Dt3eo5YNNsQBH7"
     let naver_client_secret:String = "aQqnBSDlM1"
     let naver_url_scheme:String = "winnerlife"

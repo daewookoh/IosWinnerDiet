@@ -22,4 +22,6 @@
 
 #import "iCarousel.h"
 
+#import <Adlib/ADLibSDK.h>
+
 #endif /* bridge_h */

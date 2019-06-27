@@ -11,7 +11,7 @@ import AVFoundation
 import CoreMotion
 import UnityAds
 
-class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, CLLocationManagerDelegate, GADRewardBasedVideoAdDelegate, UnityAdsDelegate {
+class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, XMLParserDelegate, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate, GADInterstitialDelegate, CLLocationManagerDelegate, GADRewardBasedVideoAdDelegate, UnityAdsDelegate, ALInterstitialAdDelegate {
     
     // 기본
     var sUrl:String = ""
@@ -35,6 +35,9 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
     
     // Admob 리워드광고
     var rewardAd: GADRewardBasedVideoAd!
+    
+    // Adlib
+    var adlibAd: ALInterstitialAd!
     
     // 이미지 업로드
     var picker = UIImagePickerController()
@@ -60,6 +63,9 @@ class MainWebVC: UIViewController, NaverThirdPartyLoginConnectionDelegate, WKUID
         setWebView()
         
         UnityAds.initialize(common.unity_id, delegate: self)
+        
+        adlibAd = ALInterstitialAd.init(rootViewController: self)
+        //adlibAd.isTestMode=true
     }
     
     // 앱이 꺼지지 않은 상태에서 다시 뷰가 보일때 viewWillAppear부터 시작됨
@@ -820,6 +826,14 @@ extension MainWebVC  {
                         UnityAds.show(self, placementId: "Interstitial")
                     }
                 }
+                else if message == "SHOW_ADLIB_FRONT_AD" {
+                    common.setUD("ADLIB_TYPE", "FRONT")
+                    adlibAd.request(withKey: common.adlib_id, adDelegate: self)
+                }
+                else if message == "SHOW_ADLIB_REWARD_AD" {
+                    common.setUD("ADLIB_TYPE", "REWARD")
+                    adlibAd.request(withKey: common.adlib_id, adDelegate: self)
+                }
                 else if message == "SHOW_REWARD_AD" {
                     if rewardAd.isReady {
                         rewardAd.present(fromRootViewController: self)
@@ -1115,6 +1129,47 @@ extension MainWebVC  {
         }
     }
     //UnityAds 끝
+    
+    //Adlib
+    func alInterstitialAd(_ interstitialAd: ALInterstitialAd!, didClickedAdAt platform: ALMEDIATION_PLATFORM) {
+        print("alInterstitialAd-didClickedAdAt")
+        if(common.getUD("ADLIB_TYPE")=="REWARD")
+        {
+            webView.evaluateJavaScript("rewardComplete()", completionHandler:nil)
+        }
+    }
+    
+    func alInterstitialAd(_ interstitialAd: ALInterstitialAd!, didReceivedAdAt platform: ALMEDIATION_PLATFORM) {
+        print("alInterstitialAd-didReceivedAdAt")
+    }
+    
+    func alInterstitialAd(_ interstitialAd: ALInterstitialAd!, didFailedAdAt platform: ALMEDIATION_PLATFORM) {
+        print("alInterstitialAd-didFailedAdAt")
+        
+        if (UnityAds.isReady("rewardedVideo") && common.getUD("ADLIB_TYPE")=="REWARD") {
+            //a video is ready & placement is valid
+            UnityAds.show(self, placementId: "rewardedVideo")
+        }
+        else if (UnityAds.isReady("Interstitial") && common.getUD("ADLIB_TYPE")=="FRONT") {
+            //a video is ready & placement is valid
+            UnityAds.show(self, placementId: "Interstitial")
+        }
+    }
+    
+    func alInterstitialAdDidFailedAd(_ interstitialAd: ALInterstitialAd!) {
+        print("alInterstitialAdDidFailedAd")
+        
+        if (UnityAds.isReady("rewardedVideo") && common.getUD("ADLIB_TYPE")=="REWARD") {
+            //a video is ready & placement is valid
+            UnityAds.show(self, placementId: "rewardedVideo")
+        }
+        else if (UnityAds.isReady("Interstitial") && common.getUD("ADLIB_TYPE")=="FRONT") {
+            //a video is ready & placement is valid
+            UnityAds.show(self, placementId: "Interstitial")
+        }
+        
+    }
+    //Adlib 끝
 }
 
 // 웹뷰 alert 팝업처리
